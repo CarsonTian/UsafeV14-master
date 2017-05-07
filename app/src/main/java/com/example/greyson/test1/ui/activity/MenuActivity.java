@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.greyson.test1.R;
@@ -20,11 +20,11 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  */
 
 public class MenuActivity extends BaseActivity implements View.OnClickListener {
-    private LinearLayout mLLEmergencyMenu;
-    private LinearLayout mLLPanicButtonMenu;
-    private LinearLayout mLLSafetyTrackMenu;
-    private LinearLayout mLLSafetyMapMenu;
-    private LinearLayout mLLSettingMenu;
+    private TextView mLLEmergencyMenu;
+    private TextView mLLPanicButtonMenu;
+    private TextView mLLSafetyTrackMenu;
+    private TextView mLLSafetyMapMenu;
+    private TextView mLLSettingMenu;
 
 
     private static final int REQUEST_COARSE_LOCATION = 000;
@@ -42,11 +42,11 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initView() {
-        mLLEmergencyMenu = (LinearLayout) findViewById(R.id.ll_emergencyCallMenu);
-        mLLPanicButtonMenu = (LinearLayout) findViewById(R.id.ll_panicButtonMenu);
-        mLLSafetyTrackMenu = (LinearLayout) findViewById(R.id.ll_startTrackMenu);
-        mLLSafetyMapMenu = (LinearLayout) findViewById(R.id.ll_safetyMapMenu);
-        mLLSettingMenu = (LinearLayout) findViewById(R.id.ll_settingMenu);
+        mLLEmergencyMenu = (TextView) findViewById(R.id.ll_emergencyCallMenu);
+        mLLPanicButtonMenu = (TextView) findViewById(R.id.ll_panicButtonMenu);
+        mLLSafetyTrackMenu = (TextView) findViewById(R.id.ll_startTrackMenu);
+        mLLSafetyMapMenu = (TextView) findViewById(R.id.ll_safetyMapMenu);
+        mLLSettingMenu = (TextView) findViewById(R.id.tv_userSetting);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                 intent.putExtra("menu","map");
                 startActivity(intent);
                 break;
-            case R.id.ll_settingMenu:
+            case R.id.tv_userSetting:
                 Intent intent1 = new Intent(MenuActivity.this, UserSettingActivity.class);
                 startActivity(intent1);/////
                 break;

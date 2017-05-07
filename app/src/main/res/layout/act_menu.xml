@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        android:layout_weight="0.5">
+        android:layout_weight="0.40">
 
     </LinearLayout>
 
@@ -17,7 +17,7 @@
         android:id="@+id/ll_welcome"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1.33"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -34,7 +34,6 @@
         android:layout_height="1dp"/>
 
     <LinearLayout
-        android:id="@+id/ll_emergencyCallMenu"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -42,8 +41,9 @@
         android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/ll_emergencyCallMenu"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="58dp"
             android:background="@drawable/emergencycall"
             android:textSize="35px" />
 
@@ -54,19 +54,18 @@
         android:layout_height="1dp"/>
 
     <LinearLayout
-        android:id="@+id/ll_panicButtonMenu"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/ll_panicButtonMenu"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="58dp"
             android:background="@drawable/panicbutton"
-            android:textSize="35px"/>
+            android:textSize="35px" />
 
     </LinearLayout>
 
@@ -75,19 +74,18 @@
         android:layout_height="1dp"/>
 
     <LinearLayout
-        android:id="@+id/ll_startTrackMenu"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/ll_startTrackMenu"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="58dp"
             android:background="@drawable/startmytrail"
-            android:textSize="35px"/>
+            android:textSize="35px" />
 
     </LinearLayout>
 
@@ -96,19 +94,18 @@
         android:layout_height="1dp"/>
 
     <LinearLayout
-        android:id="@+id/ll_safetyMapMenu"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <TextView
+            android:id="@+id/ll_safetyMapMenu"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="58dp"
             android:background="@drawable/safeplacesnearby"
-            android:textSize="35px"/>
+            android:textSize="35px" />
 
     </LinearLayout>
 

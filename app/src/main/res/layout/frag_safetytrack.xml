@@ -51,10 +51,10 @@
 
             <EditText
                 android:id="@+id/edtTimerValue"
-                android:layout_width="103dp"
+                android:layout_width="131dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:hint="minutes"
+                android:hint="(5-30) min"
                 android:inputType="phone"
                 android:textAlignment="center"
                 android:textSize="24sp" />

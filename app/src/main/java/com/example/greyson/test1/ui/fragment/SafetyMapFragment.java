@@ -181,12 +181,13 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
             googleMap.setMyLocationEnabled(true);
             if (mFAB.isSelected() == true) {
                 initPinMap();
-                mFAB.setBackground(R.id.);
+                //mFAB.setBackground(getResources().getDrawable(R.drawable.addincident));
             }/////////////////
             else if(mTvSafetyPlace.getText().toString().equals("Show Safety Map")){
                 showAllMyPin();
             } else {
                 initPlaceMap();
+                //mFAB.setBackground(getResources().getDrawable(R.drawable.returnmap1));
             }
         }
     }
