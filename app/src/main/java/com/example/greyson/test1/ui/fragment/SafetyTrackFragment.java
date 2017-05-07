@@ -70,6 +70,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         final View view = inflater.inflate(R.layout.frag_safetytrack, container, false);
 
         mHandler = new Handler();
+        mp = new MediaPlayer();
         upWeb = (WebView) view.findViewById(R.id.upWeb);
         edtTimerValue = (EditText) view.findViewById(R.id.edtTimerValue);
         buttonStartTime = (Button) view.findViewById(R.id.btnStartTime);
@@ -111,6 +112,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         getContactList();
         getName();
         checkDeviceIDPermission();
+        checkMediaPlayerPermission();
         getMobileIMEI();
         preferences = mContext.getSharedPreferences("UserSetting",MODE_PRIVATE);
     }
@@ -152,14 +154,16 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnStartTime) {
-            if (setTimer() && setNamCan()) {
-                aa = edtTimerValue.getText().toString().trim();
-                buttonStartTime.setVisibility(View.GONE);
-                buttonStopTime.setVisibility(View.VISIBLE);
-                edtTimerValue.setVisibility(View.GONE);
-                startUpload();
-                startTimer();
-                cdv.start();
+            if (setNamCan()) {
+                if (setTimer()) {
+                    aa = edtTimerValue.getText().toString().trim();
+                    buttonStartTime.setVisibility(View.GONE);
+                    buttonStopTime.setVisibility(View.VISIBLE);
+                    edtTimerValue.setVisibility(View.GONE);
+                    startUpload();
+                    startTimer();
+                    cdv.start();
+                }
             } else {
                 new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Notice")
@@ -225,10 +229,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     }
 
     private boolean setNamCan() {
-        if (preferences.getString("contact1", "").trim().equals("") ||
-                preferences.getString("contact2", "").trim().equals("") ||
-                preferences.getString("contact3", "").trim().equals("") ||
-                preferences.getString("userName", "").trim().equals("")) {
+        if (preferences.getString("contact1", "").trim().equals("") ||  preferences.getString("userName", "").trim().equals("")) {
             return false;
         } else {
             return true;
@@ -271,8 +272,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             public void timerElapsed() {
                 cdv.stop();
                 dialog();
-                mp = new MediaPlayer();
-                checkMediaPlayerPermission();
                 mp.start();
                 mHandler.postDelayed(wTimer, 60000);
             }

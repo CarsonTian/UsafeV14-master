@@ -44,7 +44,7 @@
             android:id="@+id/ll_emergencyCallMenu"
             android:layout_width="wrap_content"
             android:layout_height="58dp"
-            android:background="@drawable/emergencycall"
+            android:background="@drawable/group4"
             android:textSize="35px" />
 
     </LinearLayout>
@@ -64,7 +64,7 @@
             android:id="@+id/ll_panicButtonMenu"
             android:layout_width="wrap_content"
             android:layout_height="58dp"
-            android:background="@drawable/panicbutton"
+            android:background="@drawable/group3"
             android:textSize="35px" />
 
     </LinearLayout>
@@ -84,7 +84,7 @@
             android:id="@+id/ll_startTrackMenu"
             android:layout_width="wrap_content"
             android:layout_height="58dp"
-            android:background="@drawable/startmytrail"
+            android:background="@drawable/group2"
             android:textSize="35px" />
 
     </LinearLayout>
@@ -104,7 +104,7 @@
             android:id="@+id/ll_safetyMapMenu"
             android:layout_width="wrap_content"
             android:layout_height="58dp"
-            android:background="@drawable/safeplacesnearby"
+            android:background="@drawable/group"
             android:textSize="35px" />
 
     </LinearLayout>
@@ -123,35 +123,46 @@
         android:weightSum="1">
 
         <LinearLayout
-            android:layout_width="267dp"
-            android:layout_height="46dp"
-            android:orientation="horizontal"
-            android:layout_weight="0.43">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_userHelp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/help"
-                android:textSize="35px"
-                android:layout_weight="0.05" />
+                android:textSize="35px" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="0.71">
 
             <TextView
                 android:id="@+id/textView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.67"
+                android:background="@drawable/group5"
                 android:textSize="35px" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_userSetting"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0.05"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/setting"
                 android:textSize="35px" />
-
         </LinearLayout>
 
     </LinearLayout>
+
 </LinearLayout>

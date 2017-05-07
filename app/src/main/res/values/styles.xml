@@ -23,7 +23,7 @@
     <!-- LIGHT Theme -->
     <style name="Theme_Light_Base" parent="@style/ContactPicker_Theme_Light">
         <!-- ActionBarCompat -->
-        <item name="colorPrimary">@color/text_color_primary_light</item>
+        <item name="colorPrimary">@color/colorWhite</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/text_color_primary_dark</item>
 

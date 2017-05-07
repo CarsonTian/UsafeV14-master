@@ -8,11 +8,8 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.telecom.Call;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.greyson.test1.R;
 import com.example.greyson.test1.ui.base.BaseActivity;
@@ -140,10 +137,9 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         mLLPanicButtonMenu.setOnClickListener(this);
         mLLSafetyTrackMenu.setOnClickListener(this);
         mLLSafetyMapMenu.setOnClickListener(this);
-        mTVUserSetting.setOnClickListener(this);
+        mLLSettingMenu.setOnClickListener(this);
         if(checkAllPermission()){}
         else {requestAllPermission();}
-
         //checkEmergencyContact();
     }
 
