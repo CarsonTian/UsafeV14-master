@@ -1,18 +1,20 @@
 package com.example.greyson.test1.ui.activity;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.greyson.test1.R;
+import com.example.greyson.test1.ui.base.BaseActivity;
 
-public class UserGuaid extends AppCompatActivity {
+public class UserGuaid extends BaseActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.guaid);
+    protected int getLayoutRes() {
+        return R.layout.guaid;
+    }
+
+    @Override
+    protected void initView() {
         Button back = (Button) findViewById(R.id.goBack);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -20,5 +22,20 @@ public class UserGuaid extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initEvent() {
+
+    }
+
+    @Override
+    protected void destroyView() {
+
     }
 }

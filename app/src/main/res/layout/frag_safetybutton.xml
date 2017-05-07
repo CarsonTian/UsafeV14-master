@@ -58,11 +58,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"></LinearLayout>
-
-        <LinearLayout
             android:layout_width="140dp"
             android:layout_height="match_parent"
             android:orientation="horizontal"
@@ -108,11 +103,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"></LinearLayout>
-
-        <LinearLayout
             android:gravity="center"
             android:layout_width="140dp"
             android:layout_height="match_parent"
@@ -156,11 +146,6 @@
                 android:text=" Contact(3): "
                 android:textSize="35px" />
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"></LinearLayout>
 
         <LinearLayout
             android:gravity="center"
