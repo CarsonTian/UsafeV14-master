@@ -45,9 +45,6 @@
             android:name=".ui.activity.MapSettingActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.activity.TrackerActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".ui.activity.UserSettingActivity"
             android:screenOrientation="portrait"/>
 

@@ -2,7 +2,6 @@ package com.example.greyson.test1.ui.fragment;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +53,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private CountDownView2 cdv;
 
     private SharedPreferences preferences;
-    private AlertDialog alertDialog;
+    private SweetAlertDialog sweetAlertDialog;
 
     private String aa="";
 
@@ -283,46 +281,47 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void dialog() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage("Are you safe?\nYou have 1min to confirm");
-        builder.setTitle("Alarm");
-        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                cdv.setInitialTime(totalTimeCountInMilliseconds);
-                cdv.start();
-                mHandler.removeCallbacks(wTimer);
-                mp.stop();
-                uploadData();
-                dialog.dismiss();
-            }
-        });
-        alertDialog = builder.create();
-        alertDialog.setCanceledOnTouchOutside(false);
-        alertDialog.show();
+         sweetAlertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Alarm")
+                .setContentText("Are you safe? You have 1min to confirm")
+                .setConfirmText("Continue")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        cdv.setInitialTime(totalTimeCountInMilliseconds);
+                        cdv.start();
+                        mHandler.removeCallbacks(wTimer);
+                        mp.stop();
+                        uploadData();
+                        sweetAlertDialog.dismiss();
+                    }
+                });
+        sweetAlertDialog.setCanceledOnTouchOutside(false);
+        sweetAlertDialog.show();
     }
 
     private void warningDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setMessage("We have sent warning messages, please contact your friends");
-        builder.setTitle("Alarm");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                alertDialog.dismiss();
-                aa = "";
-                buttonStartTime.setVisibility(View.VISIBLE);
-                buttonStopTime.setVisibility(View.GONE);
-                edtTimerValue.setVisibility(View.VISIBLE);
-                edtTimerValue.setText("");
-                mHandler.removeCallbacks(wTimer);
-                cdv.reset();
-            }
-        });
-        AlertDialog wAlertDialog = builder.create();
-        wAlertDialog.setCanceledOnTouchOutside(false);
-        wAlertDialog.show();
+        SweetAlertDialog sweetAlertDialog1 = new SweetAlertDialog(mContext,SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Alarm")
+                .setContentText("We have sent warning messages, please contact your friends")
+                .setConfirmText("Yes")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog1) {
+                        sweetAlertDialog1.dismiss();
+                        sweetAlertDialog.dismiss();
+                        aa = "";
+                        buttonStartTime.setVisibility(View.VISIBLE);
+                        buttonStopTime.setVisibility(View.GONE);
+                        edtTimerValue.setVisibility(View.VISIBLE);
+                        edtTimerValue.setText("");
+                        mHandler.removeCallbacks(wTimer);
+                        cdv.reset();
+                    }
+                });
+
+        sweetAlertDialog1.setCanceledOnTouchOutside(false);
+        sweetAlertDialog1.show();
     }
 
     private void timeStamp() {

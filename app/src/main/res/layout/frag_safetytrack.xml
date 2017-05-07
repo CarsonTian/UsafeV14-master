@@ -44,7 +44,7 @@
                     android:id="@+id/durTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text=" Reminding every (5-30) min"
+                    android:text=" Remind me after every"
                     android:textAlignment="textStart"
                     android:textSize="24sp" />
             </LinearLayout>
