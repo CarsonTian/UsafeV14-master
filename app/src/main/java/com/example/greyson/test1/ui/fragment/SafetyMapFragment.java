@@ -196,7 +196,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
      */
     private void handleNewLocation() {
         final LatLng latLng = getCurrentLocation();                                             // Get the latitude and lontitude current location
-        if (mLLSafePlace.isSelected() == true || mLLSafePlace.isSelected() != false) {
+        if (mLLSafePlace.isSelected() || mLLSafePlace.isSelected()) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));                   // Move the camera to the current location
             googleMap.animateCamera(CameraUpdateFactory.zoomTo(14));                       // Add the defult zoom value
         }

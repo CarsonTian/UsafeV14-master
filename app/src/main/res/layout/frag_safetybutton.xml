@@ -70,13 +70,14 @@
             android:layout_weight="0.48">
 
             <TextView
-                android:background="@color/textbg"
                 android:id="@+id/tv_contactName1"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_weight="0.93"
+                android:background="@color/textbg"
                 android:gravity="left"
                 android:text=""
+                android:textAlignment="center"
                 android:textSize="35px" />
         </LinearLayout>
 

@@ -75,7 +75,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         if (checkEmergencyContactEmpty()) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice!")
-                    .setContentText("Complete Emergency Contacts make you more safe.")
+                    .setContentText("Add Emergency Contacts Make You More Safe.")
                     .setConfirmText("Go to User Setting.")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
@@ -137,7 +137,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         mLLPanicButtonMenu.setOnClickListener(this);
         mLLSafetyTrackMenu.setOnClickListener(this);
         mLLSafetyMapMenu.setOnClickListener(this);
-        mTVUserSetting.setOnClickListener(this);
+        mLLSettingMenu.setOnClickListener(this);
         if(checkAllPermission()){}
         else {requestAllPermission();}
         //checkEmergencyContact();
@@ -178,7 +178,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
 
     private void showCheckDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Are you sure Call 000 ?")
+                .setTitleText("Are You Sure Call 000 ?")
                 .setCancelText("No")
                 .showCancelButton(true)
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -244,7 +244,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                     else {
                         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Notice")
-                                .setContentText("Some Functions rely these Permissions.")
+                                .setContentText("Some Functions Rely These Permissions.")
                                 .show();
                     }
                 }

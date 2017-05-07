@@ -11,10 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -439,13 +436,14 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         String contact2 = preferences.getString("contact2",null);
         String contact3 = preferences.getString("contact3",null);
         if (contact1 != null) {
-            mTVContactName1.setText(contact1.split(",")[0]);
+
+            mTVContactName1.setText(contact1.split(",")[1]);
         }
         if (contact2 != null) {
-            mTVContactName2.setText(contact2.split(",")[0]);
+            mTVContactName2.setText(contact2.split(",")[1]);
         }
         if (contact3 != null) {
-            mTVContactName3.setText(contact3.split(",")[0]);
+            mTVContactName3.setText(contact3.split(",")[1]);
         }
     }
 
