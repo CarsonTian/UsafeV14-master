@@ -141,8 +141,6 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         mLLSafetyMapMenu.setOnClickListener(this);
         mLLSettingMenu.setOnClickListener(this);
         logo.setOnClickListener(this);
-        if(checkAllPermission()){}
-        else {requestAllPermission();}
         //checkEmergencyContact();
     }
 
