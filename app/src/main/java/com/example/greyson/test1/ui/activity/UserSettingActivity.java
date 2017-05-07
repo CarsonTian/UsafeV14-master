@@ -238,13 +238,13 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
         String contact2 = preferences.getString("contact2",null);
         String contact3 = preferences.getString("contact3",null);
         if (contact1 != null && !contact1.replace(";"," ").trim().isEmpty()) {
-            phonelist.add(contact1.split(" ; ")[1].trim());
+            phonelist.add(contact1.split(";")[1].trim());
         }
         if (contact2 != null && !contact2.replace(";"," ").trim().isEmpty()) {
-            phonelist.add(contact2.split(" ; ")[1].trim());
+            phonelist.add(contact2.split(";")[1].trim());
         }
         if (contact3 != null && !contact3.replace(";"," ").trim().isEmpty()) {
-            phonelist.add(contact3.split(" ; ")[1].trim());
+            phonelist.add(contact3.split(";")[1].trim());
         }
         return phonelist;
     }

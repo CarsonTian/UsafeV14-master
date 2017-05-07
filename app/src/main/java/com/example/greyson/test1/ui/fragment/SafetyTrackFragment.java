@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.example.greyson.test1.R;
 import com.example.greyson.test1.core.TimerListener;
@@ -45,6 +46,8 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private Button buttonStartTime, buttonStopTime;
     private EditText edtTimerValue;
     private WebView upWeb;
+    private LinearLayout time0;
+    private LinearLayout time1;
     private long totalTimeCountInMilliseconds;
 
     private Runnable wTimer;
@@ -75,12 +78,14 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         edtTimerValue = (EditText) view.findViewById(R.id.edtTimerValue);
         buttonStartTime = (Button) view.findViewById(R.id.btnStartTime);
         buttonStopTime = (Button) view.findViewById(R.id.btnStopTime);
+        time0 = (LinearLayout) view.findViewById(R.id.time0);
+        time1 = (LinearLayout) view.findViewById(R.id.time1);
 
         buttonStartTime.setOnClickListener(this);
         buttonStopTime.setOnClickListener(this);
 
         cdv = (CountDownView2) view.findViewById(R.id.countdownview2);
-        cdv.setInitialTime(0); // Initial time of 5 seconds.
+        //cdv.setInitialTime(0); // Initial time of 5 seconds.
 
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("timeResume", MODE_PRIVATE);
         edtTimerValue.setText(sharedPreferences.getString("time",""));
@@ -93,6 +98,8 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             edtTimerValue.setVisibility(View.GONE);
             startTimer();
             cdv.start();
+            time0.setVisibility(View.GONE);
+            time1.setVisibility(View.VISIBLE);
             tStamp = sharedPreferences.getString("tId", "");
         }
 
@@ -161,6 +168,8 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     startUpload();
                     startTimer();
                     cdv.start();
+                    time0.setVisibility(View.GONE);
+                    time1.setVisibility(View.VISIBLE);
                 }
             } else {
                 new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
@@ -178,6 +187,8 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             finishUpload();
             mHandler.removeCallbacks(wTimer);
             cdv.reset();
+            time0.setVisibility(View.VISIBLE);
+            time1.setVisibility(View.GONE);
         }
     }
 
@@ -316,18 +327,20 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Long time = Long.valueOf(System.currentTimeMillis());
         tStamp = format.format(time);
+        preferences.getString("userName" , "");
+        String uuu = preferences.getString("contact1", "").trim().split(";")[1];
     }
 
     private void uploadData() {
-        //upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/update/?deviceid=" + id + tStamp + "&status=safe&lat=" + cLatitude + "&lng=" + cLngtitude);
+        upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/update/?deviceid=" + id + tStamp + "&status=safe&lat=" + cLatitude + "&lng=" + cLngtitude);
     }
 
     private void startUpload() {
         timeStamp();
-        //upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=1234567&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+        upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=1234567&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
     }
 
     private void finishUpload() {
-        //upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/update/?deviceid=" + id + tStamp + "&status=reached&lat=" + cLatitude + "&lng=" + cLngtitude);
+        upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/update/?deviceid=" + id + tStamp + "&status=reached&lat=" + cLatitude + "&lng=" + cLngtitude);
     }
 }

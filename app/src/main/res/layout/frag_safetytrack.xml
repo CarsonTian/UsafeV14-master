@@ -64,10 +64,27 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/time0"
+        android:layout_width="match_parent"
+        android:layout_height="149dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="129dp"
+            android:gravity="center"
+            android:text="00:00"
+            android:textAlignment="center"
+            android:textSize="80dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/time1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:weightSum="1">
 
         <com.example.greyson.test1.widget.CountDownView2
@@ -83,7 +100,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="129dp"
+        android:layout_height="124dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="10dp">

@@ -234,14 +234,14 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="?android:attr/selectableItemBackground"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <TextView
                 android:id="@+id/tv_addContact"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="195dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:text="Add Contact"
                 android:textSize="45px" />
@@ -253,10 +253,9 @@
 
             <TextView
                 android:id="@+id/tv_saveContact"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:gravity="center"
                 android:text="Save Contact"
                 android:textSize="45px" />
