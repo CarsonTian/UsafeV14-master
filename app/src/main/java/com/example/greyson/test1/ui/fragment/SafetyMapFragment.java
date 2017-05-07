@@ -165,7 +165,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         googleMap.getUiSettings().setZoomControlsEnabled(true);  // Add zoom in/out button
         googleMap.getUiSettings().setCompassEnabled(true);       // Add compass button
         googleMap.getUiSettings().setMapToolbarEnabled(true);    // Add map tool bar
-        //googleMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+        //googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
     }
 
     /**
