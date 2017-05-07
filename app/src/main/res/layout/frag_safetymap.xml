@@ -24,7 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_close_black_24dp"
+        app:backgroundTint="@color/welcomeMenuBg2"
+        android:src="@drawable/ic_place_black_24dp"
         app:elevation="4dp"
         app:layout_anchorGravity="bottom|left|end" />
     </FrameLayout>

@@ -199,11 +199,8 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog) {
                         try {
-                            Intent intent = new Intent();
-                            intent.setAction(Intent.ACTION_VIEW);
-                            intent.setData(Uri.parse("https://mahara.infotech.monash.edu.au/mahara/view/view.php?t=VB4kAS7IlG0HOf5nFurh"));
-                            intent.setClassName("com.android.browser", "com.android.browser.BrowserActivity");
-                            startActivity(intent);
+                            Intent intent3 = new Intent(Intent.ACTION_VIEW,Uri.parse("https://mahara.infotech.monash.edu.au/mahara/view/view.php?t=yYd0GEPVat6c7ezjvRKr"));
+                            startActivity(intent3);
                             sweetAlertDialog.dismiss();
                         } catch (Exception e){}
                     }

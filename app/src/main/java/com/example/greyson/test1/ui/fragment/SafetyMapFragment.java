@@ -102,7 +102,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
                 if (mFAB.isSelected()) {
                     initPlaceMap();
                     //loadAllPinFromServer();///
-                    mFAB.setImageResource(R.drawable.ic_close_black_24dp);
+                    mFAB.setImageResource(R.drawable.ic_place_black_24dp);
                     mFAB.setSelected(false);
                     if (mTvSafetyPlace.getText().toString().equals("All My Pins")) {
                         mTvSafetyPlace.setText("Hide All Pins");
@@ -110,7 +110,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
                     }
                 } else if (!mFAB.isSelected()) {
                     initPinMap();
-                    mFAB.setImageResource(R.drawable.ic_close_white_24dp);
+                    mFAB.setImageResource(R.drawable.ic_map_black_24dp);
                     mFAB.setSelected(true);
                     mTvSafetyPlace.setText("All My Pins");
                 }
@@ -200,6 +200,34 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));                   // Move the camera to the current location
             googleMap.animateCamera(CameraUpdateFactory.zoomTo(14));                       // Add the defult zoom value
         }
+        Map<String, String> params = new HashMap<>();                                       // Store the params of the URL which is used to request corresponding data from server database
+        params.put("lat", String.valueOf(latLng.latitude));
+        params.put("lng", String.valueOf(latLng.longitude));
+        mRetrofit.create(WSNetService.class)                                                 // Create a listener to observe the change of the server database and update the local data
+                .getSafePlaceData(params)
+                .subscribeOn(Schedulers.io())
+                .compose(this.<SafePlaceRes>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<SafePlaceRes>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(SafePlaceRes safePlaceRes) {                       // The action if the update is running
+                        showMarker(safePlaceRes);
+                        requestRoute(latLng);
+                    }
+                });
+            loadAllPinFromServer();//
+    }
+
+    private void handleNewLocationHide() {
+        final LatLng latLng = getCurrentLocation();                                             // Get the latitude and lontitude current location
         Map<String, String> params = new HashMap<>();                                       // Store the params of the URL which is used to request corresponding data from server database
         params.put("lat", String.valueOf(latLng.latitude));
         params.put("lng", String.valueOf(latLng.longitude));
@@ -493,11 +521,17 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
             case R.id.ll_safetyplace:
                 if (mFAB.isSelected()) {
                     showAllMyPin();
-                    mFAB.setImageResource(R.drawable.ic_close_black_24dp);
+                    mFAB.setImageResource(R.drawable.ic_place_black_24dp);
                     mFAB.setSelected(false);
                     mTvSafetyPlace.setText("Show Safety Map");
                 } else if (!mFAB.isSelected()) {
-                    if (!mLLSafePlace.isSelected()) {
+                    if (mTvSafetyPlace.getText().toString().equals("Show Safety Map")) {
+                        mTvSafetyPlace.setText("Hide All Pins");
+                        initPlaceMap();
+                        //loadAllPinFromServer();
+                        hidePin = false;
+                        mLLSafePlace.setSelected(false);
+                    } else if (!mLLSafePlace.isSelected()) {
                         hidePinMap();
                         hidePin = true;
                         mTvSafetyPlace.setText("Show All Pins");
@@ -610,7 +644,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
             setMarkerColor(marker, resultsBean.getCrime());
             marker.setSnippet(resultsBean.getCrimedesc());
             marker.setTag(resultsBean.getDeviceid());
-            marker.showInfoWindow();
+            //marker.showInfoWindow();
             //marker.setZIndex((float)(Integer.valueOf(resultsBean.getDeviceid())));///////
         }
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -700,10 +734,9 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
 
     private void hidePinMap() {
         googleMap.clear();
-        LatLng latLng = getCurrentLocation();
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(14));
-        handleNewLocation();
+
+        handleNewLocationHide();
+        hidePin = true;
     }
 
     /**
@@ -1137,7 +1170,9 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
      */
     @Override
     public void onLocationChanged(Location location) {
-        if (mFAB.isSelected() == false && !this.isHidden()) {
+        if (hidePin) {
+            handleNewLocationHide();
+        } else if (mFAB.isSelected() == false && !this.isHidden() && !mTvSafetyPlace.getText().toString().equals("Show Safety Map")) {
             googleMap.clear();
             handleNewLocation();}
     }
