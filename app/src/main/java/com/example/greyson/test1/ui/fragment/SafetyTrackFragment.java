@@ -240,21 +240,21 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         if (edtTimerValue.getText().toString().trim().equals("")) {
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
-                    .setContentText("Please enter a time")
+                    .setContentText("Please Enter a Time")
                     .setConfirmText("OK")
                     .show();
             return false;
         } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) < 5 && Integer.parseInt(edtTimerValue.getText().toString().trim()) > 1){
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
-                    .setContentText("Please make sure time is longer than 5 min.")
+                    .setContentText("Please Make Sure Time Is Longer Than 5 Min.")
                     .setConfirmText("OK")
                     .show();
             return false;
         } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) > 30) {
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
-                    .setContentText("please make sure time is shorter than 30 min")
+                    .setContentText("Please Make Sure Time Is Shorter Than 30 Min")
                     .setConfirmText("OK")
                     .show();
             return false;
@@ -281,7 +281,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private void dialog() {
          sweetAlertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Alarm")
-                .setContentText("Are you safe? You have 1min to confirm")
+                .setContentText("Are You Safe? You Have 1 Min To Confirm")
                 .setConfirmText("Continue")
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
@@ -301,7 +301,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private void warningDialog() {
         SweetAlertDialog sweetAlertDialog1 = new SweetAlertDialog(mContext,SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Alarm")
-                .setContentText("We have sent warning messages, please contact your friends")
+                .setContentText("We Have Sent Warning Messages, Please Contact Your Friends")
                 .setConfirmText("Yes")
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override

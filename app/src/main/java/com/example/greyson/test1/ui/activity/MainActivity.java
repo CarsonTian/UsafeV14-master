@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.AppCompatTextView;
@@ -111,12 +110,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case "button":
                 mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyButtonFragment, "1").commitAllowingStateLoss();
-                mCurrentIndex = 0;
+                mCurrentIndex = 1;
                 mLLSafetyMap.setSelected(true);
                 break;
             case "track":
-                mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyTrackFragment, "2").commitAllowingStateLoss();
-                mCurrentIndex = 0;
+                mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyTrackFragment, "3").commitAllowingStateLoss();
+                mCurrentIndex = 3;
                 mLLSafetyMap.setSelected(true);
                 break;
         }

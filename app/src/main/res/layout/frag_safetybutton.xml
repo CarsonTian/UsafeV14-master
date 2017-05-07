@@ -121,11 +121,11 @@
             android:layout_weight="0.48">
 
             <TextView
-                android:background="@color/textbg"
                 android:id="@+id/tv_contactName2"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_weight="0.99"
+                android:background="@color/textbg"
                 android:gravity="left"
                 android:text=""
                 android:textSize="35px" />
@@ -171,11 +171,11 @@
             android:orientation="horizontal">
 
             <TextView
-                android:background="@color/textbg"
                 android:id="@+id/tv_contactName3"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_weight="0.86"
+                android:background="@color/textbg"
                 android:gravity="left"
                 android:text=""
                 android:textSize="35px" />
@@ -219,7 +219,7 @@
                 android:id="@+id/tv_startButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/startbutton"
+                android:background="@drawable/startbuttoncopy"
                 android:textSize="35px" />
 
         </LinearLayout>
@@ -235,7 +235,7 @@
                 android:id="@+id/tv_ResetButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/cancelbutton"
+                android:background="@drawable/restbutton"
                 android:textSize="35px" />
 
         </LinearLayout>

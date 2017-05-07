@@ -34,6 +34,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
     private TextView mLLSafetyTrackMenu;
     private TextView mLLSafetyMapMenu;
     private TextView mLLSettingMenu;
+    private TextView logo;
 
     private static final int REQUEST_COARSE_LOCATION = 000;
     private static final int REQUEST_FINE_LOCATION = 001;
@@ -56,6 +57,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         mLLSafetyTrackMenu = (TextView) findViewById(R.id.ll_startTrackMenu);
         mLLSafetyMapMenu = (TextView) findViewById(R.id.ll_safetyMapMenu);
         mLLSettingMenu = (TextView) findViewById(R.id.tv_userSetting);
+        logo = (TextView) findViewById(R.id.textlogo);
     }
 
     @Override
@@ -75,7 +77,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         if (checkEmergencyContactEmpty()) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice!")
-                    .setContentText("Add Emergency Contacts Make You More Safe.")
+                    .setContentText("Add Emergency Contacts Make Yourself More Safe.")
                     .setConfirmText("Go to User Setting.")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
@@ -138,6 +140,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         mLLSafetyTrackMenu.setOnClickListener(this);
         mLLSafetyMapMenu.setOnClickListener(this);
         mLLSettingMenu.setOnClickListener(this);
+        logo.setOnClickListener(this);
         if(checkAllPermission()){}
         else {requestAllPermission();}
         //checkEmergencyContact();
@@ -166,6 +169,9 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                 Intent intent1 = new Intent(MenuActivity.this, UserSettingActivity.class);
                 startActivity(intent1);/////
                 break;
+            case R.id.textlogo:
+                aboutUs();
+                break;
         }
     }
 
@@ -174,6 +180,34 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void destroyView() {
 
+    }
+
+    private void aboutUs() {
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE);
+        sweetAlertDialog.setTitleText("About Us")
+                .setContentText("Do You Want To Know More About Us?")
+                .setConfirmText("Yes")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        Uri url = Uri.parse("www.google.com");
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.setData(url);
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                    }
+                })
+                .setCancelText("Later")
+                .showCancelButton(true)
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     private void showCheckDialog() {
