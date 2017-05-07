@@ -75,9 +75,8 @@
                 android:layout_height="35dp"
                 android:layout_weight="0.93"
                 android:background="@color/textbg"
-                android:gravity="left"
+                android:gravity="center"
                 android:text=""
-                android:textAlignment="center"
                 android:textSize="35px" />
         </LinearLayout>
 
@@ -126,7 +125,7 @@
                 android:layout_height="35dp"
                 android:layout_weight="0.99"
                 android:background="@color/textbg"
-                android:gravity="left"
+                android:gravity="center"
                 android:text=""
                 android:textSize="35px" />
         </LinearLayout>
@@ -176,7 +175,7 @@
                 android:layout_height="35dp"
                 android:layout_weight="0.86"
                 android:background="@color/textbg"
-                android:gravity="left"
+                android:gravity="center"
                 android:text=""
                 android:textSize="35px" />
         </LinearLayout>
