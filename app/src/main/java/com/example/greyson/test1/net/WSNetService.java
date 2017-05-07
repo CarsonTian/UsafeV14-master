@@ -6,13 +6,10 @@ import com.example.greyson.test1.entity.GetMyPinRes;
 import com.example.greyson.test1.entity.RouteRes;
 import com.example.greyson.test1.entity.SafePlaceRes;
 import com.example.greyson.test1.entity.SavePinRes;
-import com.example.greyson.test1.entity.TrackerRes;
 
 import java.util.Map;
 
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 import rx.Observable;
@@ -45,9 +42,6 @@ public interface WSNetService {
     Observable<DeletePinRes> getDeletePinData(@Url String url, @QueryMap Map<String, String> params);
 
     @GET("json?")
-    Observable<RouteRes> getSafePlaceRoute(@Url String url, @QueryMap Map<String, String> params);
-
-    @GET("json?")
-    Observable<TrackerRes> getDuration(@Url String url, @QueryMap Map<String, String> params);
+    Observable<RouteRes> getSafePlaceRoute(@QueryMap Map<String, String> params);
 
 }

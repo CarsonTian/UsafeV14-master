@@ -29,7 +29,6 @@ import com.example.greyson.test1.entity.SafePlaceRes;
 import com.example.greyson.test1.entity.SavePinRes;
 import com.example.greyson.test1.entity.UserPinHistory;
 import com.example.greyson.test1.net.WSNetService;
-import com.example.greyson.test1.net.WSNetService2;
 import com.example.greyson.test1.ui.activity.MapSettingActivity;
 import com.example.greyson.test1.ui.base.BaseFragment;
 import com.google.android.gms.common.ConnectionResult;
@@ -182,11 +181,13 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
             googleMap.setMyLocationEnabled(true);
             if (mFAB.isSelected() == true) {
                 initPinMap();
+                //mFAB.setBackground(getResources().getDrawable(R.drawable.addincident));
             }/////////////////
             else if(mTvSafetyPlace.getText().toString().equals("Show Safety Map")){
                 showAllMyPin();
             } else {
                 initPlaceMap();
+                //mFAB.setBackground(getResources().getDrawable(R.drawable.returnmap1));
             }
         }
     }
@@ -235,7 +236,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         params2.put("destination", des);
         params2.put("mode", "walking");
         params2.put("key", "AIzaSyAYPtaZmfpFdvNd3_-ur4X2Bvn-35uVoAQ");
-        mRetrofit2.create(WSNetService2.class)
+        mRetrofit2.create(WSNetService.class)
                 .getSafePlaceRoute(params2)
                 .subscribeOn(Schedulers.io())
                 .compose(this.<RouteRes>bindToLifecycle())

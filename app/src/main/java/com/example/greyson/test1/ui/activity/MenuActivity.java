@@ -12,6 +12,7 @@ import android.telecom.Call;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.greyson.test1.R;
 import com.example.greyson.test1.ui.base.BaseActivity;
@@ -30,13 +31,12 @@ import static android.Manifest.permission.SEND_SMS;
  */
 
 public class MenuActivity extends BaseActivity implements View.OnClickListener {
-    private LinearLayout mLLEmergencyMenu;
-    private LinearLayout mLLPanicButtonMenu;
-    private LinearLayout mLLSafetyTrackMenu;
-    private LinearLayout mLLSafetyMapMenu;
-    private TextView mTVUserSetting;
-    //private LinearLayout mLLSettingMenu;
 
+    private TextView mLLEmergencyMenu;
+    private TextView mLLPanicButtonMenu;
+    private TextView mLLSafetyTrackMenu;
+    private TextView mLLSafetyMapMenu;
+    private TextView mLLSettingMenu;
 
     private static final int REQUEST_COARSE_LOCATION = 000;
     private static final int REQUEST_FINE_LOCATION = 001;
@@ -53,11 +53,12 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initView() {
-        mLLEmergencyMenu = (LinearLayout) findViewById(R.id.ll_emergencyCallMenu);
-        mLLPanicButtonMenu = (LinearLayout) findViewById(R.id.ll_panicButtonMenu);
-        mLLSafetyTrackMenu = (LinearLayout) findViewById(R.id.ll_startTrackMenu);
-        mLLSafetyMapMenu = (LinearLayout) findViewById(R.id.ll_safetyMapMenu);
-        mTVUserSetting = (TextView) findViewById(R.id.tv_userSetting);
+
+        mLLEmergencyMenu = (TextView) findViewById(R.id.ll_emergencyCallMenu);
+        mLLPanicButtonMenu = (TextView) findViewById(R.id.ll_panicButtonMenu);
+        mLLSafetyTrackMenu = (TextView) findViewById(R.id.ll_startTrackMenu);
+        mLLSafetyMapMenu = (TextView) findViewById(R.id.ll_safetyMapMenu);
+        mLLSettingMenu = (TextView) findViewById(R.id.tv_userSetting);
     }
 
     @Override
