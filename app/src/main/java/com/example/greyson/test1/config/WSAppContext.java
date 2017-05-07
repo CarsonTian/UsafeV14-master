@@ -33,7 +33,6 @@ public class WSAppContext extends Application{
         mResources = mContext.getResources();
         mRetrofit = NetWorkApi.getInstance().gradleRetrofit(this);
         mRetrofit2 = NetWorkApi2.getInstance().gradleRetrofit(this);
-        mRetrofit3 = NetWorkApi3.getInstance().gradleRetrofit(this);
 
     }
 

@@ -31,8 +31,15 @@ import android.widget.Toast;
 import com.example.greyson.test1.R;
 import com.example.greyson.test1.core.TimerListener;
 import com.example.greyson.test1.ui.activity.MainActivity;
+import com.example.greyson.test1.ui.activity.UserSettingActivity;
 import com.example.greyson.test1.ui.base.BaseFragment;
 import com.example.greyson.test1.widget.CountDownView;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
@@ -50,13 +57,23 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     private static final int RESULT_PICK_CONTACT = 111;
     private static final int REQUEST_SEND_SMS = 222;
     private static final int REQUEST_READ_CONTACT = 333;
-    private LinearLayout mLLStartButton;
-    private LinearLayout mLLCancelButton;
-    private LinearLayout mLLSettingButton;
-    private TextView mTVContactName;
-    private TextView mTVContactNumber;
+
+    private LinearLayout mLLSetting;
+    private LinearLayout mLLContact1;
+    private LinearLayout mLLContact2;
+    private LinearLayout mLLContact3;
+    private LinearLayout mLLStartReset;
+
+    private TextView mTVContactName1;
+    private TextView mTVContactName2;
+    private TextView mTVContactName3;
+    private TextView mTVSettingButton;
+    private TextView mTVStartButton;
+    private TextView mTVResetButton;
+
     private CountDownView cdv;
 
+    private SharedPreferences preferences;
     private boolean canSendMSM;
     private String phoneNumber;
     private String tiemrStatus;
@@ -71,13 +88,21 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_safetybutton, container, false);
-        mLLStartButton = (LinearLayout) view.findViewById(R.id.ll_startbutton);
-        mLLCancelButton = (LinearLayout) view.findViewById(R.id.ll_cancelbutton);
-        mLLSettingButton = (LinearLayout) view.findViewById(R.id.ll_settingbutton);
-        mTVContactName = (TextView) view.findViewById(R.id.tv_contactName);
-        mTVContactNumber = (TextView) view.findViewById(R.id.tv_contactPhone);
+        mLLContact1 = (LinearLayout) view.findViewById(R.id.ll_sb_contact1);
+        mLLContact2 = (LinearLayout) view.findViewById(R.id.ll_sb_contact2);
+        mLLContact3 = (LinearLayout) view.findViewById(R.id.ll_sb_contact3);
+        mLLSetting = (LinearLayout) view.findViewById(R.id.ll_sb_setting);
+        mLLStartReset = (LinearLayout) view.findViewById(R.id.ll_sb_startReset);
+
+        mTVSettingButton = (TextView) view.findViewById(R.id.tv_contactSetting);
+        mTVStartButton = (TextView) view.findViewById(R.id.tv_startButton);
+        mTVResetButton = (TextView) view.findViewById(R.id.tv_ResetButton);
+        mTVContactName1 = (TextView) view.findViewById(R.id.tv_contactName1);
+        mTVContactName2 = (TextView) view.findViewById(R.id.tv_contactName2);
+        mTVContactName3 = (TextView) view.findViewById(R.id.tv_contactName3);
+
         cdv = (CountDownView) view.findViewById(R.id.countdownview);
-        cdv.setInitialTime(10000); // Initial time of 5 seconds.
+        cdv.setInitialTime(10000); // Initial time of 10 seconds.
         cdv.setListener(new TimerListener() {
             @Override
             public void timerElapsed() {
@@ -142,21 +167,6 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
                     settingButton();}
             }break;
         }
-    }
-
-    /**
-     * Chech contact number if is null
-     * @return
-     */
-    private boolean checkContactNotEmpty() {
-        String[] ePhoneList = mTVContactNumber.getText().toString().split(":");
-        String[] eNameList = mTVContactName.getText().toString().split(":");
-        if (ePhoneList.length == 1){
-            Toast.makeText(mContext, "You need choose contact first" , Toast.LENGTH_LONG).show();
-            return false;
-        }
-        saveLastContact(eNameList[1],ePhoneList[1]);
-        return true;
     }
 
     /**
@@ -226,17 +236,42 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
 
 
 
-        String[] ePhoneList = mTVContactNumber.getText().toString().split(":");
-        if (checkContactNotEmpty()){
+        List<String> ePhoneList = getPhoneList();
+        if (checkEmergencyContactEmpty()){
             SharedPreferences preferences = mContext.getSharedPreferences("LastLocation",MODE_PRIVATE);
             String lastLocation = preferences.getString("last location",null);
             String baseMapUrl = "http://maps.google.com/maps?q=";
             String eMessage = "This is an emergency message, please call me first, press this link to see my last location: "
                     + baseMapUrl + lastLocation;
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(ePhoneList[1], null, eMessage, sentPendingIntent, deliveredPendingIntent);
-            Toast.makeText(mContext, "SMS sent.", Toast.LENGTH_LONG).show();
+            Iterator<String> iterator = ePhoneList.iterator();
+            while (iterator.hasNext()) {
+                String phone = iterator.next();
+                smsManager.sendTextMessage(phone, null, eMessage, sentPendingIntent, deliveredPendingIntent);
+            }
+            new SweetAlertDialog(mContext, SweetAlertDialog.SUCCESS_TYPE)
+                    .setTitleText("Message Sent!")
+                    .setContentText(eMessage)
+                    .show();
         }
+    }
+
+    private List<String> getPhoneList() {
+        List<String> phonelist = new ArrayList<>();
+        preferences = mContext.getSharedPreferences("UserSetting",MODE_PRIVATE);
+        String contact1 = preferences.getString("contact1",null);
+        String contact2 = preferences.getString("contact2",null);
+        String contact3 = preferences.getString("contact3",null);
+        if (contact1 != null && !contact1.trim().isEmpty()) {
+            phonelist.add(contact2.split(",")[1]);
+        }
+        if (contact2 != null && !contact2.trim().isEmpty()) {
+            phonelist.add(contact2.split(",")[1]);
+        }
+        if (contact3 != null && !contact3.trim().isEmpty()) {
+            phonelist.add(contact3.split(",")[1]);
+        }
+        return phonelist;
     }
 
     /**
@@ -245,21 +280,25 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     @Override
     protected void initData() {
         canSendMSM = true;
-        SharedPreferences preferences = mContext.getSharedPreferences("LastContact",MODE_PRIVATE);
-        String lastContact = preferences.getString("contact",null);
-        if (lastContact == null) {
-            Toast.makeText(mContext, "Emergency Contact is Empty.", Toast.LENGTH_LONG).show();
+        if (checkEmergencyContactEmpty()) {
+            new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Notice!")
+                    .setContentText("No Emergency Contacts")
+                    .show();
+            canSendMSM = false;
             return;
+        } else {
+            loadEmergencyContact();
         }
-        mTVContactName.setText("Contact Name:" + lastContact.split(",")[0]);
-        mTVContactNumber.setText("Contact Number:" + lastContact.split(",")[1]);
+        //mTVContactName.setText("Contact Name:" + lastContact.split(",")[0]);
+        //mTVContactNumber.setText("Contact Number:" + lastContact.split(",")[1]);
     }
 
     @Override
     protected void initEvent() {
-        mLLStartButton.setOnClickListener(this);
-        mLLCancelButton.setOnClickListener(this);
-        mLLSettingButton.setOnClickListener(this);
+        mTVStartButton.setOnClickListener(this);
+        mTVResetButton.setOnClickListener(this);
+        mTVSettingButton.setOnClickListener(this);
     }
 
     /**
@@ -268,24 +307,24 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
      */
     @Override
     public void onClick(View v) {
-        mLLStartButton.setSelected(false);
-        mLLCancelButton.setSelected(false);
-        mLLSettingButton.setSelected(false);
+        mTVStartButton.setSelected(false);
+        mTVResetButton.setSelected(false);
+        mTVSettingButton.setSelected(false);
         switch (v.getId()) {
-            case R.id.ll_startbutton:
-                mLLStartButton.setSelected(true);
+            case R.id.tv_startButton:
+                mTVStartButton.setSelected(true);
                 //mLLSettingButton.setSelected(false);
                 //mLLCancelButton.setSelected(false);
                 startTimer();
                 break;
-            case R.id.ll_cancelbutton:
-                mLLCancelButton.setSelected(true);
+            case R.id.tv_ResetButton:
+                mTVResetButton.setSelected(true);
                 //mLLStartButton.setSelected(false);
                 //mLLSettingButton.setSelected(false);
                 resetTimer();
                 break;
-            case R.id.ll_settingbutton:
-                mLLSettingButton.setSelected(true);
+            case R.id.tv_contactSetting:
+                mTVSettingButton.setSelected(true);
                 //mLLStartButton.setSelected(false);
                 //mLLCancelButton.setSelected(false);
                 if (checkReadContactPermission()){
@@ -304,8 +343,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     }
 
     private void startTimer() {
-        if(checkContactNotEmpty() && checkSMSPermission()) {
-
+        if(checkEmergencyContactEmpty() && checkSMSPermission()) {
             cdv.start();
             startNotification();
         }
@@ -367,8 +405,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
      * Setting button
      */
     private void settingButton() {
-        Intent contactPickerIntent = new Intent(Intent.ACTION_PICK,
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
+        Intent contactPickerIntent = new Intent(mContext, UserSettingActivity.class);
         startActivityForResult(contactPickerIntent, RESULT_PICK_CONTACT);
     }
 
@@ -377,7 +414,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RESULT_PICK_CONTACT:
-                    contactPicked(data);
+
                     break;
             }
         } else {
@@ -385,26 +422,30 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         }
     }
 
-    /**
-     * check contact number
-     * @param data
-     */
-    private void contactPicked(Intent data) {
-        Cursor cursor = null;
-        try {
-            String contactPhone = "" ;
-            String contactName = "";
-            Uri uri = data.getData();
-            cursor = mContext.getContentResolver().query(uri, null, null, null, null);
-            cursor.moveToFirst();
-            int  phoneIndex =cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-            int  nameIndex =cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
-            contactPhone = cursor.getString(phoneIndex);
-            contactName = cursor.getString(nameIndex);
-            mTVContactName.setText("Contact Name: " + contactName);
-            mTVContactNumber.setText("Contact Phone: " + contactPhone);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private boolean checkEmergencyContactEmpty() {
+        preferences = mContext.getSharedPreferences("UserSetting",MODE_PRIVATE);
+        String contact1 = preferences.getString("contact1",null);
+        String contact2 = preferences.getString("contact2",null);
+        String contact3 = preferences.getString("contact3",null);
+        if (contact1 != null || contact2 != null || contact3 != null) {
+            return true;
+        }
+        return false;
+    }
+
+    private void loadEmergencyContact() {
+        preferences = mContext.getSharedPreferences("UserSetting",MODE_PRIVATE);
+        String contact1 = preferences.getString("contact1",null);
+        String contact2 = preferences.getString("contact2",null);
+        String contact3 = preferences.getString("contact3",null);
+        if (contact1 != null) {
+            mTVContactName1.setText(contact1.split(",")[0]);
+        }
+        if (contact2 != null) {
+            mTVContactName2.setText(contact2.split(",")[0]);
+        }
+        if (contact3 != null) {
+            mTVContactName3.setText(contact3.split(",")[0]);
         }
     }
 

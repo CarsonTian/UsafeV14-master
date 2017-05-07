@@ -17,7 +17,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.greyson.test1.R;
 import com.example.greyson.test1.ui.base.BaseActivity;
@@ -33,6 +32,8 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.onegravity.contactpicker.R.style.ContactPicker_Theme_Dark;
 import static com.onegravity.contactpicker.R.style.ContactPicker_Theme_Light;
@@ -190,7 +191,10 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
         editor.putString("contact2", mTVUserContactName2.getText().toString() + " ; " + mTVUserContactPhone2.getText().toString() );
         editor.putString("contact3", mTVUserContactName3.getText().toString() + " ; " + mTVUserContactPhone3.getText().toString() );
         editor.commit();
-        Toast.makeText(this,"Emergency Contacts Saved",Toast.LENGTH_SHORT).show();
+        new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Success")
+                .setContentText("Emergency Contact Saved.")
+                .show();
     }
 
     private void addContacts1() {
