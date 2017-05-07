@@ -327,8 +327,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Long time = Long.valueOf(System.currentTimeMillis());
         tStamp = format.format(time);
-        preferences.getString("userName" , "");
-        String uuu = preferences.getString("contact1", "").trim().split(";")[1];
     }
 
     private void uploadData() {
@@ -337,7 +335,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
     private void startUpload() {
         timeStamp();
-        upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=1234567&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+        upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=" + number+ "&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
     }
 
     private void finishUpload() {
