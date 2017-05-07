@@ -109,13 +109,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 mLLSafetyMap.setSelected(true);
                 break;
             case "button":
-                mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyButtonFragment, "1").commitAllowingStateLoss();
-                mCurrentIndex = 1;
+                mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyButtonFragment, "3").commitAllowingStateLoss();
+                mCurrentIndex = 3;
                 mLLSafetyMap.setSelected(true);
                 break;
             case "track":
-                mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyTrackFragment, "3").commitAllowingStateLoss();
-                mCurrentIndex = 3;
+                mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyTrackFragment, "1").commitAllowingStateLoss();
+                mCurrentIndex = 1;
                 mLLSafetyMap.setSelected(true);
                 break;
         }
@@ -267,7 +267,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
                         Intent intent0 = new Intent(Intent.ACTION_CALL);
-                        intent0.setData(Uri.parse("tel:0123456"));
+                        intent0.setData(Uri.parse("tel:000"));
                         if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             checkCallPermission();
                             return;

@@ -11,7 +11,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -221,7 +224,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
             public void onReceive(Context context, Intent intent) {
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
-                        Toast.makeText(context, "SMS delivered", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "SMS delivered", Toast.LENGTH_SHORT).show();
                         break;
                     case Activity.RESULT_CANCELED:
                         Toast.makeText(context, "SMS not delivered", Toast.LENGTH_SHORT).show();
@@ -231,23 +234,22 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         };
         mContext.registerReceiver(smsDelivered, new IntentFilter(SMS_DELIVERED));
 
-
-
-        List<String> ePhoneList = getPhoneList();
-        if (checkEmergencyContactEmpty()){
+        if (!checkEmergencyContactEmpty()){
             SharedPreferences preferences = mContext.getSharedPreferences("LastLocation",MODE_PRIVATE);
             String lastLocation = preferences.getString("last location",null);
             String baseMapUrl = "http://maps.google.com/maps?q=";
             String eMessage = "This is an emergency message, please call me first, press this link to see my last location: "
                     + baseMapUrl + lastLocation;
             SmsManager smsManager = SmsManager.getDefault();
+
+            List<String> ePhoneList = getPhoneList();
             Iterator<String> iterator = ePhoneList.iterator();
             while (iterator.hasNext()) {
                 String phone = iterator.next();
                 smsManager.sendTextMessage(phone, null, eMessage, sentPendingIntent, deliveredPendingIntent);
             }
             new SweetAlertDialog(mContext, SweetAlertDialog.SUCCESS_TYPE)
-                    .setTitleText("Message Sent!")
+                    .setTitleText("Message Sent Successfully.")
                     .setContentText(eMessage)
                     .show();
         }
@@ -260,13 +262,13 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         String contact2 = preferences.getString("contact2",null);
         String contact3 = preferences.getString("contact3",null);
         if (contact1 != null && !contact1.trim().isEmpty()) {
-            phonelist.add(contact2.split(",")[1]);
+            phonelist.add(contact1.split(" ; ")[1].trim());
         }
         if (contact2 != null && !contact2.trim().isEmpty()) {
-            phonelist.add(contact2.split(",")[1]);
+            phonelist.add(contact2.split(" ; ")[1].trim());
         }
         if (contact3 != null && !contact3.trim().isEmpty()) {
-            phonelist.add(contact3.split(",")[1]);
+            phonelist.add(contact3.split(" ; ")[1].trim());
         }
         return phonelist;
     }
@@ -340,7 +342,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     }
 
     private void startTimer() {
-        if(checkEmergencyContactEmpty() && checkSMSPermission()) {
+        if(!checkEmergencyContactEmpty() && checkSMSPermission()) {
             cdv.start();
             startNotification();
         }
@@ -364,20 +366,19 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         intent2.putExtra("notification",2);
         PendingIntent pIntent2 = PendingIntent.getActivity(mContext, (int) System.currentTimeMillis(), intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Action action1 = new NotificationCompat.Action.Builder(R.drawable.start_24,"Start Button",pIntent1).build();
+        NotificationCompat.Action action1 = new NotificationCompat.Action.Builder(R.drawable.ic_alarm_on_black_24dp,"Start Timer",pIntent1).build();
 
-        NotificationCompat.Action action2 = new NotificationCompat.Action.Builder(R.drawable.stop_24,"Stop Button",pIntent2).build();
+        NotificationCompat.Action action2 = new NotificationCompat.Action.Builder(R.drawable.ic_alarm_off_black_24dp,"Stop Timer",pIntent2).build();
 
         Notification n  = new NotificationCompat.Builder(mContext)
-                .setContentTitle("Welcome to use U-Safe")
+                .setContentTitle("U-Safe")
                 .setContentText("Click to enter application")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_security_black_24dp)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)
                 .setOngoing(true)
-                .setTicker("Start Countdown")
+                .setTicker("Timer Start")
                 .setWhen(System.currentTimeMillis())
-                //.setUsesChronometer(true)
                 .setAutoCancel(false)
                 .addAction(action1)
                 .addAction(action2)
@@ -425,9 +426,14 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         String contact2 = preferences.getString("contact2",null);
         String contact3 = preferences.getString("contact3",null);
         if (contact1 != null || contact2 != null || contact3 != null) {
-            return true;
+            return false;
         }
-        return false;
+        new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Error!")
+                .setContentText("You need choose at least one emergency contact.")
+                .show();
+        canSendMSM = false;
+        return true;
     }
 
     private void loadEmergencyContact() {
@@ -436,14 +442,13 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         String contact2 = preferences.getString("contact2",null);
         String contact3 = preferences.getString("contact3",null);
         if (contact1 != null) {
-
-            mTVContactName1.setText(contact1.split(",")[1]);
+            mTVContactName1.setText(contact1.split(";")[0]);
         }
         if (contact2 != null) {
-            mTVContactName2.setText(contact2.split(",")[1]);
+            mTVContactName2.setText(contact2.split(";")[0]);
         }
         if (contact3 != null) {
-            mTVContactName3.setText(contact3.split(",")[1]);
+            mTVContactName3.setText(contact3.split(";")[0]);
         }
     }
 
