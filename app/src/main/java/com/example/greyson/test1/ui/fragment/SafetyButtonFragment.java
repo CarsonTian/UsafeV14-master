@@ -531,6 +531,9 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         if (contact1 != null || contact2 != null || contact3 != null) {
             return false;
         }
+        if (!contact1.replace(";"," ").trim().isEmpty() || !contact2.replace(";"," ").trim().isEmpty() || !contact3.replace(";"," ").trim().isEmpty()) {
+            return false;
+        }
         new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE)
                 .setTitleText("Error!")
                 .setContentText("You need choose at least one emergency contact.")
@@ -544,13 +547,13 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         String contact1 = preferences.getString("contact1",null);
         String contact2 = preferences.getString("contact2",null);
         String contact3 = preferences.getString("contact3",null);
-        if (contact1 != null) {
+        if (contact1 != null && !contact1.replace(";"," ").trim().isEmpty()) {
             mTVContactName1.setText(contact1.split(";")[0]);
         }
-        if (contact2 != null) {
+        if (contact2 != null && !contact2.replace(";"," ").trim().isEmpty()) {
             mTVContactName2.setText(contact2.split(";")[0]);
         }
-        if (contact3 != null) {
+        if (contact3 != null && !contact3.replace(";"," ").trim().isEmpty()) {
             mTVContactName3.setText(contact3.split(";")[0]);
         }
     }

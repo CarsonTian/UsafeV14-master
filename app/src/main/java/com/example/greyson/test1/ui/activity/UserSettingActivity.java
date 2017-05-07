@@ -164,15 +164,15 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
         if (userName != null && !userName.trim().isEmpty()) {
             mETUSername.setText(userName);
         }
-        if (contact1 != null && contact1.contains(";")) {
+        if (contact1 != null && !contact1.replace(";"," ").trim().isEmpty()) {
             mTVUserContactName1.setText(contact1.split(";")[0]);
             mTVUserContactPhone1.setText(contact1.split(";")[1]);
         }
-        if (contact2 != null && contact2.contains(";")) {
+        if (contact2 != null && !contact2.replace(";"," ").trim().isEmpty()) {
             mTVUserContactName2.setText(contact2.split(";")[0]);
             mTVUserContactPhone2.setText(contact2.split(";")[1]);
         }
-        if (contact3 != null && contact3.contains(";")) {
+        if (contact3 != null && !contact3.replace(";"," ").trim().isEmpty()) {
             mTVUserContactName3.setText(contact3.split(";")[0]);
             mTVUserContactPhone3.setText(contact3.split(";")[1]);
         }
