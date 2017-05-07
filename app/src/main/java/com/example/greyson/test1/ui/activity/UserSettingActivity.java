@@ -200,7 +200,7 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void sendConfirmMessage() {
-        if (!checkEmergencyContactEmpty()){
+        if (!checkEmergencyContactEmpty()) {
             String eMessage = "You are receiving this message from U-Safe as I have added you as one of my emergency contacts. Call me first if u receive any message.";
             SmsManager smsManager = SmsManager.getDefault();
             List<String> ePhoneList = getPhoneList();
@@ -213,6 +213,11 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
                     .setTitleText("Message Sent Successfully.")
                     .setContentText(eMessage)
                     .show();
+        } else {
+            new SweetAlertDialog(this,SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Error!")
+                    .setContentText("You need choose at least one emergency contact.")
+                    .show();
         }
     }
 
@@ -221,13 +226,31 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
         String contact1 = preferences.getString("contact1",null);
         String contact2 = preferences.getString("contact2",null);
         String contact3 = preferences.getString("contact3",null);
-        if (contact1 != null || contact2 != null || contact3 != null) {
-            return false;
+        if (contact1 == null && contact2 == null && contact3 == null) {
+            new SweetAlertDialog(this,SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Error!")
+                    .setContentText("You need choose at least one emergency contact.")
+                    .show();
+            return true;
+        } else if (contact1 != null) {
+            if (!contact1.replace(";", " ").trim().isEmpty()) {
+                return false;
+            }
+        } else if (contact2 != null) {
+            if (!contact2.replace(";", " ").trim().isEmpty()) {
+                return false;
+            }
+        } else if (contact3 != null) {
+            if (!contact3.replace(";", " ").trim().isEmpty()) {
+                return false;
+            }
+        } else {
+            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Error!")
+                    .setContentText("You need choose at least one emergency contact.")
+                    .show();
+            return true;
         }
-        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                .setTitleText("Error!")
-                .setContentText("You need choose at least one emergency contact.")
-                .show();
         return true;
     }
 

@@ -100,13 +100,32 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         String contact1 = preferences.getString("contact1",null);
         String contact2 = preferences.getString("contact2",null);
         String contact3 = preferences.getString("contact3",null);
-        if (userName == null || userName.trim().isEmpty()) {
-            return true;
-        }
         if (contact1 == null && contact2 == null && contact3 == null) {
+            new SweetAlertDialog(this,SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Error!")
+                    .setContentText("You need choose at least one emergency contact.")
+                    .show();
+            return true;
+        } else if (contact1 != null) {
+            if (!contact1.replace(";", " ").trim().isEmpty()) {
+                return false;
+            }
+        } else if (contact2 != null) {
+            if (!contact2.replace(";", " ").trim().isEmpty()) {
+                return false;
+            }
+        } else if (contact3 != null) {
+            if (!contact3.replace(";", " ").trim().isEmpty()) {
+                return false;
+            }
+        } else {
+            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Error!")
+                    .setContentText("You need choose at least one emergency contact.")
+                    .show();
             return true;
         }
-        return false;
+        return true;
     }
 
     private void requestAllPermission() {

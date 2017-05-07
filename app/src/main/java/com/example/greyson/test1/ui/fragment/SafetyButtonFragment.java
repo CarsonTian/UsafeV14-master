@@ -280,13 +280,13 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         String contact2 = preferences.getString("contact2", null);
         String contact3 = preferences.getString("contact3", null);
         if (contact1 != null && !contact1.replace(";", " ").trim().isEmpty()) {
-            phonelist.add(contact1.split(" ; ")[1].trim());
+            phonelist.add(contact1.split(";")[1].trim());
         }
         if (contact2 != null && !contact2.replace(";", " ").trim().isEmpty()) {
-            phonelist.add(contact2.split(" ; ")[1].trim());
+            phonelist.add(contact2.split(";")[1].trim());
         }
         if (contact3 != null && !contact3.replace(";", " ").trim().isEmpty()) {
-            phonelist.add(contact3.split(" ; ")[1].trim());
+            phonelist.add(contact3.split(";")[1].trim());
         }
         return phonelist;
     }
@@ -513,9 +513,10 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
+        if (resultCode == 0) {
             switch (requestCode) {
                 case RESULT_PICK_CONTACT:
+                    loadEmergencyContact();
                     break;
             }
         } else {
@@ -528,12 +529,36 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         String contact1 = preferences.getString("contact1",null);
         String contact2 = preferences.getString("contact2",null);
         String contact3 = preferences.getString("contact3",null);
-        if (contact1 != null || contact2 != null || contact3 != null) {
-            return false;
+
+
+        if (contact1 == null && contact2 == null && contact3 == null) {
+            new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Error!")
+                    .setContentText("You need choose at least one emergency contact.")
+                    .show();
+            canSendMSM = false;
+            return true;
+        } else if (contact1 != null) {
+            if (!contact1.replace(";", " ").trim().isEmpty()) {
+                return false;
+            }
+        } else if (contact2 != null) {
+            if (!contact2.replace(";", " ").trim().isEmpty()) {
+                return false;
+            }
+        } else if (contact3 != null) {
+            if (!contact3.replace(";", " ").trim().isEmpty()) {
+                return false;
+            }
+        } else {
+            new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Error!")
+                    .setContentText("You need choose at least one emergency contact.")
+                    .show();
+            canSendMSM = false;
+            return true;
         }
-        if (!contact1.replace(";"," ").trim().isEmpty() || !contact2.replace(";"," ").trim().isEmpty() || !contact3.replace(";"," ").trim().isEmpty()) {
-            return false;
-        }
+
         new SweetAlertDialog(mContext, SweetAlertDialog.ERROR_TYPE)
                 .setTitleText("Error!")
                 .setContentText("You need choose at least one emergency contact.")
