@@ -140,7 +140,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         mLLPanicButtonMenu.setOnClickListener(this);
         mLLSafetyTrackMenu.setOnClickListener(this);
         mLLSafetyMapMenu.setOnClickListener(this);
-        mTVUserSetting.setOnClickListener(this);
+        mLLSettingMenu.setOnClickListener(this);
         if(checkAllPermission()){}
         else {requestAllPermission();}
 
