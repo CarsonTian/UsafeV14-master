@@ -57,7 +57,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
     private String aa="";
 
-
     /**
      * This method is used to initialize the map view and request the current location
      *
