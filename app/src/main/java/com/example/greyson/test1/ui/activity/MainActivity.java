@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.example.greyson.test1.ui.fragment.SafetyMoreFragment;
 import com.example.greyson.test1.ui.fragment.SafetyTrackFragment;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -302,20 +304,42 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+
+        //Bundle b = intent.getA;
+        String extra = intent.getAction();
+        if (extra == null) {
+            onClick(mLLSafetyButton);
+        } else if (extra.equals("qwe")) {
+            onClick(mLLSafetyButton);
+        } else if (extra.equals("asd")) {
+            setSafetyMapNotificationArg(1);
+        } else if (extra.equals("zxc")) {
+            setSafetyMapNotificationArg(2);
+        }
+
+
+    }
+
+    private void tesmt(Intent intent) {
+        SharedPreferences preferences = getSharedPreferences("notification", MODE_PRIVATE);
+        String i1 = preferences.getString("i1",null);
+        String i2 = preferences.getString("i2",null);
+        String i3 = preferences.getString("i3",null);
+
         Bundle b = intent.getExtras();
-        int extra = b.getInt("notification");
-        switch (extra){
-            case 0:
-                onClick(mLLSafetyButton);
-                break;
-            case 1:
-                setSafetyMapNotificationArg(1);
-                break;
-            case 2:
-                setSafetyMapNotificationArg(2);
-                break;
+        String extra = b.getString("notification");
+        if (extra == null) {
+            onClick(mLLSafetyButton);
+        } else if (extra.equals(i1)) {
+            onClick(mLLSafetyButton);
+        } else if (extra.equals(i2)) {
+            setSafetyMapNotificationArg(1);
+        } else if (extra.equals(i3)) {
+            setSafetyMapNotificationArg(2);
         }
     }
+
+
     private void setSafetyMapNotificationArg(int index) {
         Bundle args = new Bundle();
         args.putInt("notification", index);

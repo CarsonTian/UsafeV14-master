@@ -12,6 +12,9 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -34,6 +37,11 @@ import com.example.greyson.test1.ui.activity.MainActivity;
 import com.example.greyson.test1.ui.activity.UserSettingActivity;
 import com.example.greyson.test1.ui.base.BaseFragment;
 import com.example.greyson.test1.widget.CountDownView;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,7 +61,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  */
 
 
-public class SafetyButtonFragment extends BaseFragment implements View.OnClickListener{
+public class SafetyButtonFragment extends BaseFragment implements View.OnClickListener, android.location.LocationListener {
     private static final int RESULT_PICK_CONTACT = 111;
     private static final int REQUEST_SEND_SMS = 222;
     private static final int REQUEST_READ_CONTACT = 333;
@@ -77,6 +85,10 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     private boolean canSendMSM;
     private String phoneNumber;
     private String tiemrStatus;
+
+    private LocationManager locationManager;
+    private String provider;
+    private LocationProvider locationProvider;
 
     /**
      * Initial view
@@ -157,15 +169,19 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case REQUEST_SEND_SMS:{
+        switch (requestCode) {
+            case REQUEST_SEND_SMS: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startTimer();}
-            }break;
-            case REQUEST_READ_CONTACT:{
+                    startTimer();
+                }
+            }
+            break;
+            case REQUEST_READ_CONTACT: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    settingButton();}
-            }break;
+                    settingButton();
+                }
+            }
+            break;
         }
     }
 
@@ -176,7 +192,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
      * @return
      */
     private boolean saveLastContact(String name, String phone) {
-        SharedPreferences preferences = mContext.getSharedPreferences("LastContact",MODE_PRIVATE);
+        SharedPreferences preferences = mContext.getSharedPreferences("LastContact", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("contact", name + "," + phone);
         editor.commit();
@@ -195,12 +211,12 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(SMS_DELIVERED), 0);
 
 
-        BroadcastReceiver smsSent = new BroadcastReceiver(){
+        BroadcastReceiver smsSent = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
-                        Toast.makeText(context, "SMS sent successfully", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "SMS sent successfully", Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                         Toast.makeText(context, "Generic failure cause", Toast.LENGTH_SHORT).show();
@@ -219,7 +235,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         };
         mContext.registerReceiver(smsSent, new IntentFilter(SMS_SENT));
 
-        BroadcastReceiver smsDelivered = new BroadcastReceiver(){
+        BroadcastReceiver smsDelivered = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 switch (getResultCode()) {
@@ -234,9 +250,12 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         };
         mContext.registerReceiver(smsDelivered, new IntentFilter(SMS_DELIVERED));
 
-        if (!checkEmergencyContactEmpty()){
-            SharedPreferences preferences = mContext.getSharedPreferences("LastLocation",MODE_PRIVATE);
-            String lastLocation = preferences.getString("last location",null);
+        if (!checkEmergencyContactEmpty()) {
+            SharedPreferences preferences = mContext.getSharedPreferences("LastLocation", MODE_PRIVATE);
+            String lastLocation = preferences.getString("last location", null);
+            if (lastLocation == null || lastLocation.isEmpty()) {
+                lastLocation = getCurrentLocation();
+            }
             String baseMapUrl = "http://maps.google.com/maps?q=";
             String eMessage = "This is an emergency message, please call me first, press this link to see my last location: "
                     + baseMapUrl + lastLocation;
@@ -257,17 +276,17 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
 
     private List<String> getPhoneList() {
         List<String> phonelist = new ArrayList<>();
-        preferences = mContext.getSharedPreferences("UserSetting",MODE_PRIVATE);
-        String contact1 = preferences.getString("contact1",null);
-        String contact2 = preferences.getString("contact2",null);
-        String contact3 = preferences.getString("contact3",null);
-        if (contact1 != null && !contact1.trim().isEmpty()) {
+        preferences = mContext.getSharedPreferences("UserSetting", MODE_PRIVATE);
+        String contact1 = preferences.getString("contact1", null);
+        String contact2 = preferences.getString("contact2", null);
+        String contact3 = preferences.getString("contact3", null);
+        if (contact1 != null && !contact1.replace(";", " ").trim().isEmpty()) {
             phonelist.add(contact1.split(" ; ")[1].trim());
         }
-        if (contact2 != null && !contact2.trim().isEmpty()) {
+        if (contact2 != null && !contact2.replace(";", " ").trim().isEmpty()) {
             phonelist.add(contact2.split(" ; ")[1].trim());
         }
-        if (contact3 != null && !contact3.trim().isEmpty()) {
+        if (contact3 != null && !contact3.replace(";", " ").trim().isEmpty()) {
             phonelist.add(contact3.split(" ; ")[1].trim());
         }
         return phonelist;
@@ -352,18 +371,32 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
      * This is to set notification button
      */
     private void startNotification() {
-        if(checkNotificaionExsist())
-            return;
+        //if(checkNotificaionExsist())
+            //return;
+        String i1 = Long.toString(System.currentTimeMillis()) + "qwe";
+        String i2 = Long.toString(System.currentTimeMillis()) + "asd";
+        String i3 = Long.toString(System.currentTimeMillis()) + "zxc";
+
+        SharedPreferences preferences = mContext.getSharedPreferences("notification", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("i1", i1);
+        editor.putString("i2", i2);
+        editor.putString("i3", i3);
+        editor.commit();
+
         Intent intent = new Intent(mContext, MainActivity.class);
-        intent.putExtra("notification",0);
+        intent.putExtra("notification",i1);
+        intent.setAction("qwe");
         PendingIntent pIntent = PendingIntent.getActivity(mContext, (int) System.currentTimeMillis(), intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent intent1 = new Intent(mContext, MainActivity.class);
-        intent1.putExtra("notification",1);
+        intent1.putExtra("notification",i2);
+        intent1.setAction("asd");
         PendingIntent pIntent1 = PendingIntent.getActivity(mContext, (int) System.currentTimeMillis(), intent1, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent intent2 = new Intent(mContext, MainActivity.class);
-        intent2.putExtra("notification",2);
+        intent2.putExtra("notification",i3);
+        intent2.setAction("zxc");
         PendingIntent pIntent2 = PendingIntent.getActivity(mContext, (int) System.currentTimeMillis(), intent2, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Action action1 = new NotificationCompat.Action.Builder(R.drawable.ic_alarm_on_black_24dp,"Start Timer",pIntent1).build();
@@ -399,6 +432,78 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         return false;
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    private String getCurrentLocation() {
+        android.location.LocationListener locationListener = new android.location.LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+        locationManager = (LocationManager) mContext.getSystemService(mContext.LOCATION_SERVICE);////
+        provider = LocationManager.GPS_PROVIDER;
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return null;
+        }
+        locationManager.requestLocationUpdates(provider, 5000, 1, locationListener);
+        Location location = locationManager.getLastKnownLocation(provider);
+        String lat = String.valueOf(location.getLatitude());
+        String lng = String.valueOf(location.getLongitude());
+        saveLastLocationToSharedPreference(lat + "," + lng);
+        return lat + "," + lng;
+    }
+
+    private void saveLastLocationToSharedPreference(String latitude) {
+        String lat = latitude.split(",")[0];
+        String lng = latitude.split(",")[1];
+        SharedPreferences preferences1 = mContext.getSharedPreferences("LastLocation", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences1.edit();
+        editor.putString("last location", lat + "," + lng);
+        editor.commit();
+    }
+
+
     /**
      * Setting button
      */
@@ -412,7 +517,6 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case RESULT_PICK_CONTACT:
-
                     break;
             }
         } else {
@@ -460,6 +564,8 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void onResume() {
         super.onResume();
+
+
         Bundle b = getArguments();
         if (b != null) {
             int extra = b.getInt("notification");

@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -192,9 +193,68 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
         editor.putString("contact3", mTVUserContactName3.getText().toString() + " ; " + mTVUserContactPhone3.getText().toString() );
         editor.commit();
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                .setTitleText("Success")
-                .setContentText("Emergency Contact Saved.")
+                .setTitleText("Emergency Contact Saved")
+                .setContentText("Do you want send a message to tell them being selected as your Emergency Contact?")
+                .setConfirmText("Yes")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        sendConfirmMessage();
+                    }
+                })
+                .setCancelText("No")
                 .show();
+    }
+
+    private void sendConfirmMessage() {
+        if (!checkEmergencyContactEmpty()){
+            String eMessage = "You are receiving this message from U-Safe as I have added you as one of my emergency contacts. Call me first if u receive any message.";
+            SmsManager smsManager = SmsManager.getDefault();
+            List<String> ePhoneList = getPhoneList();
+            Iterator<String> iterator = ePhoneList.iterator();
+            while (iterator.hasNext()) {
+                String phone = iterator.next();
+                smsManager.sendTextMessage(phone, null, eMessage, null, null);
+            }
+            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                    .setTitleText("Message Sent Successfully.")
+                    .setContentText(eMessage)
+                    .show();
+        }
+    }
+
+    private boolean checkEmergencyContactEmpty() {
+        preferences = this.getSharedPreferences("UserSetting",MODE_PRIVATE);
+        String contact1 = preferences.getString("contact1",null);
+        String contact2 = preferences.getString("contact2",null);
+        String contact3 = preferences.getString("contact3",null);
+        if (contact1 != null || contact2 != null || contact3 != null) {
+            return false;
+        }
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Error!")
+                .setContentText("You need choose at least one emergency contact.")
+                .show();
+        return true;
+    }
+
+    private List<String> getPhoneList() {
+        List<String> phonelist = new ArrayList<>();
+        preferences = this.getSharedPreferences("UserSetting",MODE_PRIVATE);
+        String contact1 = preferences.getString("contact1",null);
+        String contact2 = preferences.getString("contact2",null);
+        String contact3 = preferences.getString("contact3",null);
+        if (contact1 != null && !contact1.replace(";"," ").trim().isEmpty()) {
+            phonelist.add(contact1.split(" ; ")[1].trim());
+        }
+        if (contact2 != null && !contact2.replace(";"," ").trim().isEmpty()) {
+            phonelist.add(contact2.split(" ; ")[1].trim());
+        }
+        if (contact3 != null && !contact3.replace(";"," ").trim().isEmpty()) {
+            phonelist.add(contact3.split(" ; ")[1].trim());
+        }
+        return phonelist;
     }
 
     private void addContacts1() {
