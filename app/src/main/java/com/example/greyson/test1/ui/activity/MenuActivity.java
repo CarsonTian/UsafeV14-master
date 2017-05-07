@@ -190,9 +190,32 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void aboutUs() {
+
         SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE);
         sweetAlertDialog.setTitleText("About Us")
-                .setContentText("Do You Want To Know More About Us? \nPlease Visit http://bit.ly/2HexTech")
+                .setContentText("Do You Want To Know More About Us?")
+                .setConfirmText("Yes")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        try {
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse("https://mahara.infotech.monash.edu.au/mahara/view/view.php?t=VB4kAS7IlG0HOf5nFurh"));
+                            intent.setClassName("com.android.browser", "com.android.browser.BrowserActivity");
+                            startActivity(intent);
+                            sweetAlertDialog.dismiss();
+                        } catch (Exception e){}
+                    }
+                })
+                .setCancelText("Later")
+                .showCancelButton(true)
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                        sweetAlertDialog.dismiss();
+                    }
+                })
                 .show();
     }
 
