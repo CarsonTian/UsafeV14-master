@@ -3,8 +3,6 @@ package com.example.greyson.test1.ui.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
@@ -28,16 +26,11 @@ import com.onegravity.contactpicker.core.ContactPickerActivity;
 import com.onegravity.contactpicker.group.Group;
 import com.onegravity.contactpicker.picture.ContactPictureType;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-
-import static com.onegravity.contactpicker.R.style.ContactPicker_Theme_Dark;
-import static com.onegravity.contactpicker.R.style.ContactPicker_Theme_Light;
 
 /**
  * Created by greyson on 5/5/17.
@@ -188,9 +181,9 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
     private void saveContacts() {
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("userName", mETUSername.getText().toString());
-        editor.putString("contact1", mTVUserContactName1.getText().toString() + " ; " + mTVUserContactPhone1.getText().toString() );
-        editor.putString("contact2", mTVUserContactName2.getText().toString() + " ; " + mTVUserContactPhone2.getText().toString() );
-        editor.putString("contact3", mTVUserContactName3.getText().toString() + " ; " + mTVUserContactPhone3.getText().toString() );
+        editor.putString("contact1", mTVUserContactName1.getText().toString() + ";" + mTVUserContactPhone1.getText().toString() );
+        editor.putString("contact2", mTVUserContactName2.getText().toString() + ";" + mTVUserContactPhone2.getText().toString() );
+        editor.putString("contact3", mTVUserContactName3.getText().toString() + ";" + mTVUserContactPhone3.getText().toString() );
         editor.commit();
         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                 .setTitleText("Emergency Contact Saved")
@@ -266,7 +259,7 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
                 .putExtra(ContactPickerActivity.EXTRA_CONTACT_DESCRIPTION_TYPE, ContactsContract.CommonDataKinds.Email.TYPE_WORK)
                 .putExtra(ContactPickerActivity.EXTRA_CONTACT_SORT_ORDER, ContactSortOrder.AUTOMATIC.name())
                 .putExtra(ContactPickerActivity.EXTRA_SELECT_CONTACTS_LIMIT,3)
-                .putExtra(ContactPickerActivity.EXTRA_LIMIT_REACHED_MESSAGE,"Sorry, You can't pick more than 3 contacts.");
+                .putExtra(ContactPickerActivity.EXTRA_LIMIT_REACHED_MESSAGE,"Sorry, You Can't Pick More Than 3 Contacts.");
         startActivityForResult(intent, REQUEST_CONTACT);
     }
 

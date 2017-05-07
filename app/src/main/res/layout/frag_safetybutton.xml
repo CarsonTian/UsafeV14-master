@@ -58,11 +58,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"></LinearLayout>
-
-        <LinearLayout
             android:layout_width="140dp"
             android:layout_height="match_parent"
             android:orientation="horizontal"
@@ -75,9 +70,8 @@
                 android:layout_height="35dp"
                 android:layout_weight="0.93"
                 android:background="@color/textbg"
-                android:gravity="left"
+                android:gravity="center"
                 android:text=""
-                android:textAlignment="center"
                 android:textSize="35px" />
         </LinearLayout>
 
@@ -109,11 +103,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"></LinearLayout>
-
-        <LinearLayout
             android:gravity="center"
             android:layout_width="140dp"
             android:layout_height="match_parent"
@@ -126,7 +115,7 @@
                 android:layout_height="35dp"
                 android:layout_weight="0.99"
                 android:background="@color/textbg"
-                android:gravity="left"
+                android:gravity="center"
                 android:text=""
                 android:textSize="35px" />
         </LinearLayout>
@@ -159,11 +148,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"></LinearLayout>
-
-        <LinearLayout
             android:gravity="center"
             android:layout_width="140dp"
             android:layout_height="match_parent"
@@ -176,7 +160,7 @@
                 android:layout_height="35dp"
                 android:layout_weight="0.86"
                 android:background="@color/textbg"
-                android:gravity="left"
+                android:gravity="center"
                 android:text=""
                 android:textSize="35px" />
         </LinearLayout>

@@ -109,8 +109,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     @Override
     protected void initData() {
         getCurrentLocation();
-        getContactList();
-        getName();
         checkDeviceIDPermission();
         checkMediaPlayerPermission();
         getMobileIMEI();
@@ -220,14 +218,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         cLngtitude = array[1];
     }
 
-    private void getContactList() {
-
-    }
-
-    private void getName() {
-
-    }
-
     private boolean setNamCan() {
         if (preferences.getString("contact1", "").trim().equals("") ||  preferences.getString("userName", "").trim().equals("")) {
             return false;
@@ -244,7 +234,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     .setConfirmText("OK")
                     .show();
             return false;
-        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) < 5 && Integer.parseInt(edtTimerValue.getText().toString().trim()) > 1){
+        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) < 5){
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
                     .setContentText("Please Make Sure Time Is Longer Than 5 Min.")
