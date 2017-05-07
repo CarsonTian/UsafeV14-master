@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Project.iml" filepath="$PROJECT_DIR$/Project.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Usafe.iml" filepath="$PROJECT_DIR$/Usafe.iml" />
       <module fileurl="file://$PROJECT_DIR$/UsafeV10.iml" filepath="$PROJECT_DIR$/UsafeV10.iml" />
       <module fileurl="file://$PROJECT_DIR$/UsafeV14-master.iml" filepath="$PROJECT_DIR$/UsafeV14-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/UsafeV14-master.iml" filepath="$PROJECT_DIR$/UsafeV14-master.iml" />
