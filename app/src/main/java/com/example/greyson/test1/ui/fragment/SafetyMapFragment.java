@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -280,9 +279,9 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
             }
         } catch (Exception e) {
         }
-        polylineOpt.color(Color.RED);
+        polylineOpt.color(R.color.welcomeMenuBg);
         Polyline line = googleMap.addPolyline(polylineOpt);
-        line.setWidth(10);
+        line.setWidth(18);
     }
 
     private List<LatLng> decodePoly(String encoded) {
@@ -332,57 +331,67 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         }
         // Decide different icon
         for (SafePlaceRes.ResultsBean sfRes : safePlaceRes.getResults()) {
-            Double lat = sfRes.getLatitude();
-            Double lng = sfRes.getLongitude();
+            String lat = sfRes.getLatitude();
+            String lng = sfRes.getLongitude();
             String type = sfRes.getType();
+            String establishment = sfRes.getEstablishment();
+            String address = sfRes.getAddress() + sfRes.getSuburb() + sfRes.getState();
             cloLocation = lat + "," + lng;
             switch (type) {
                 case "Firestation":
                     googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat, lng))
-                            .title(type)
+                            .position(new LatLng(Double.valueOf(lat), Double.valueOf(lng)))
+                            .title(establishment)
+                            .snippet(address)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.safeplace_f)));
                     break;
                 case "Convenience Shop":
                     googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat, lng))
-                            .title(type)
+                            .position(new LatLng(Double.valueOf(lat), Double.valueOf(lng)))
+                            .title(establishment)
+                            .snippet(address)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.safeplace_7)));
                     break;
                 case "Petrol Station":
                     googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat, lng))
-                            .title(type)
+                            .position(new LatLng(Double.valueOf(lat), Double.valueOf(lng)))
+                            .title(establishment)
+                            .snippet(address)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.safeplace_g)));
                     break;
                 case "Restaurant":
                     googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat, lng))
-                            .title(type)
+                            .position(new LatLng(Double.valueOf(lat), Double.valueOf(lng)))
+                            .title(establishment)
+                            .snippet(address)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.safeplace_m)));
                     break;
                 case "Police Station":
                     googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat, lng))
-                            .title(type)
+                            .position(new LatLng(Double.valueOf(lat), Double.valueOf(lng)))
+                            .title(establishment)
+                            .snippet(address)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.safeplace_p)));
                     break;
                 case "Hospital":
                     googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat, lng))
-                            .title(type)
+                            .position(new LatLng(Double.valueOf(lat), Double.valueOf(lng)))
+                            .title(establishment)
+                            .snippet(address)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.safeplace_h)));
                     break;
                 case "Supermarket":
                     googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat, lng))
-                            .title(type)
+                            .position(new LatLng(Double.valueOf(lat), Double.valueOf(lng)))
+                            .title(establishment)
+                            .snippet(address)
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.safeplace_s)));
                     break;
                 default:
                     googleMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(lat, lng))
-                            .title(type));
+                            .position(new LatLng(Double.valueOf(lat), Double.valueOf(lng)))
+                            .title(establishment));
+
 
             }
             //googleMap.addMarker(new MarkerOptions().position(new LatLng(lat, lng)).title(type));
