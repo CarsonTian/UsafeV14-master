@@ -6,7 +6,6 @@ import android.content.res.Resources;
 
 import com.example.greyson.test1.net.NetWorkApi;
 import com.example.greyson.test1.net.NetWorkApi2;
-import com.example.greyson.test1.net.NetWorkApi3;
 
 import retrofit2.Retrofit;
 

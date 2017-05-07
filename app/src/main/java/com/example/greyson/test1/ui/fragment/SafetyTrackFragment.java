@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.example.greyson.test1.R;
 import com.example.greyson.test1.entity.TrackerRes;
-import com.example.greyson.test1.net.WSNetService3;
 import com.example.greyson.test1.ui.activity.TrackerActivity;
 import com.example.greyson.test1.ui.base.BaseFragment;
 
