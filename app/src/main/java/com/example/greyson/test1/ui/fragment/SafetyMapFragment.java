@@ -324,8 +324,9 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         String message = safePlaceRes.getMessage();
         // Decide range
         if (message.equalsIgnoreCase("5 KM")) {
+
             googleMap.animateCamera(CameraUpdateFactory.zoomTo(12));
-            Toast.makeText(mContext, "There are no Safe Place in 2KM, Change to 5KM", Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, "There are no Safe Place in 2KM, Change range to 5KM", Toast.LENGTH_LONG).show();
         } else if (message.equalsIgnoreCase("Nothing found")) {
             Toast.makeText(mContext, "There are no Safe Place in 5KM", Toast.LENGTH_LONG).show();
         }
@@ -1031,6 +1032,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
                 .subscribe(new Subscriber<DeletePinRes>() {
                     @Override
                     public void onCompleted() {
+
                     }
 
                     @Override
@@ -1135,9 +1137,9 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
      */
     @Override
     public void onLocationChanged(Location location) {
-        if (mFAB.isSelected() == false) {
+        if (mFAB.isSelected() == false && !this.isHidden()) {
             googleMap.clear();
-            handleNewLocation();}///
+            handleNewLocation();}
     }
 
     /**
