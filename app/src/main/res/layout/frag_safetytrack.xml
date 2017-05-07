@@ -25,8 +25,8 @@
             <WebView
                 android:id="@+id/upWeb"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
+                android:layout_height="51dp"
+                android:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="wrap_content"

@@ -73,7 +73,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         final View view = inflater.inflate(R.layout.frag_safetytrack, container, false);
 
         mHandler = new Handler();
-        mp = new MediaPlayer();
         upWeb = (WebView) view.findViewById(R.id.upWeb);
         edtTimerValue = (EditText) view.findViewById(R.id.edtTimerValue);
         buttonStartTime = (Button) view.findViewById(R.id.btnStartTime);
@@ -83,6 +82,9 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
         buttonStartTime.setOnClickListener(this);
         buttonStopTime.setOnClickListener(this);
+
+        mp = new MediaPlayer();
+        checkMediaPlayerPermission();
 
         cdv = (CountDownView2) view.findViewById(R.id.countdownview2);
         //cdv.setInitialTime(0); // Initial time of 5 seconds.
@@ -117,7 +119,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     protected void initData() {
         getCurrentLocation();
         checkDeviceIDPermission();
-        checkMediaPlayerPermission();
         getMobileIMEI();
         preferences = mContext.getSharedPreferences("UserSetting",MODE_PRIVATE);
     }
@@ -161,20 +162,28 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         if (v.getId() == R.id.btnStartTime) {
             if (setNamCan()) {
                 if (setTimer()) {
-                    aa = edtTimerValue.getText().toString().trim();
-                    buttonStartTime.setVisibility(View.GONE);
-                    buttonStopTime.setVisibility(View.VISIBLE);
-                    edtTimerValue.setVisibility(View.GONE);
-                    startUpload();
-                    startTimer();
-                    cdv.start();
-                    time0.setVisibility(View.GONE);
-                    time1.setVisibility(View.VISIBLE);
+                    if (!number.trim().equals("")) {
+                        aa = edtTimerValue.getText().toString().trim();
+                        buttonStartTime.setVisibility(View.GONE);
+                        buttonStopTime.setVisibility(View.VISIBLE);
+                        edtTimerValue.setVisibility(View.GONE);
+                        startUpload();
+                        startTimer();
+                        cdv.start();
+                        time0.setVisibility(View.GONE);
+                        time1.setVisibility(View.VISIBLE);
+                    }else {
+                        new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Notice")
+                                .setContentText("Please Make Sure Your SIM Card Is Working..")
+                                .setConfirmText("OK")
+                                .show();
+                    }
                 }
             } else {
                 new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                         .setTitleText("Notice")
-                        .setContentText("Please complete your user setting before you start the trail tracker.")
+                        .setContentText("Please Complete User Setting Before You Start The Trail Tracker.")
                         .setConfirmText("OK")
                         .show();
             }
@@ -335,7 +344,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
     private void startUpload() {
         timeStamp();
-        upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=" + number+ "&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+        upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
     }
 
     private void finishUpload() {
