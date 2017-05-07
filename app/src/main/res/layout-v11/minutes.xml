@@ -9,13 +9,16 @@
     <TextView android:id="@+id/minutes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="60dp"
+        android:textSize="80dp"
+        android:textStyle="bold"
         android:fontFamily="sans-serif-thin"/>
 
     <TextView android:id="@+id/minutes_unit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="m"
+        android:textSize="20dp"
+        android:textStyle="bold"
         android:textAppearance="?android:textAppearanceMedium"
         android:fontFamily="sans-serif-thin"/>
 
