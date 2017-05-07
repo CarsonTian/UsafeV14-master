@@ -35,6 +35,8 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
     private TextView mLLSafetyMapMenu;
     private TextView mLLSettingMenu;
     private TextView logo;
+    private TextView help;
+
 
     private static final int REQUEST_COARSE_LOCATION = 000;
     private static final int REQUEST_FINE_LOCATION = 001;
@@ -58,6 +60,8 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         mLLSafetyMapMenu = (TextView) findViewById(R.id.ll_safetyMapMenu);
         mLLSettingMenu = (TextView) findViewById(R.id.tv_userSetting);
         logo = (TextView) findViewById(R.id.textlogo);
+        help = (TextView) findViewById(R.id.tv_userHelp);
+
     }
 
     @Override
@@ -141,6 +145,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         mLLSafetyMapMenu.setOnClickListener(this);
         mLLSettingMenu.setOnClickListener(this);
         logo.setOnClickListener(this);
+        help.setOnClickListener(this);
         //checkEmergencyContact();
     }
 
@@ -170,6 +175,10 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
             case R.id.textlogo:
                 aboutUs();
                 break;
+            case R.id.tv_userHelp:
+                Intent intent2 = new Intent(MenuActivity.this, UserGuaid.class);
+                startActivity(intent2);
+                break;
         }
     }
 
@@ -183,28 +192,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
     private void aboutUs() {
         SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE);
         sweetAlertDialog.setTitleText("About Us")
-                .setContentText("Do You Want To Know More About Us?")
-                .setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        Uri url = Uri.parse("www.google.com");
-                        Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.setData(url);
-                        if (intent.resolveActivity(getPackageManager()) != null) {
-                            startActivity(intent);
-                        }
-                    }
-                })
-                .setCancelText("Later")
-                .showCancelButton(true)
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                })
+                .setContentText("Do You Want To Know More About Us? \nPlease Visit http://bit.ly/2HexTech")
                 .show();
     }
 
