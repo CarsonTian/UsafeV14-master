@@ -176,7 +176,8 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                 aboutUs();
                 break;
             case R.id.tv_userHelp:
-
+                Intent intent2 = new Intent(MenuActivity.this, UserGuide.class);
+                startActivity(intent2);
                 break;
         }
     }

@@ -7,7 +7,6 @@ import android.provider.ContactsContract;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -278,13 +277,11 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
             mTVUserContactPhone2.setText("");
             mTVUserContactPhone3.setText("");
 
-
             while (iterator.hasNext()) {
                 Contact contact = iterator.next();
                 String name = contact.getFirstName() + " " + contact.getLastName();
                 String phone = contact.getPhone(2);
                 if (iterator1.hasNext()) {
-
                     iterator1.next().setText(name);
                 }
                 if (iterator2.hasNext()) {

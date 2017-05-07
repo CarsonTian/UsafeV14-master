@@ -6,11 +6,11 @@ import android.widget.Button;
 import com.example.greyson.test1.R;
 import com.example.greyson.test1.ui.base.BaseActivity;
 
-public class UserGuaid extends BaseActivity {
+public class UserGuide extends BaseActivity {
 
     @Override
     protected int getLayoutRes() {
-        return R.layout.guaid;
+        return R.layout.user_guide;
     }
 
     @Override

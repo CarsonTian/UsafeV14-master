@@ -48,7 +48,7 @@
             android:name=".ui.activity.UserSettingActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.activity.UserGuaid"
+            android:name=".ui.activity.UserGuide"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.onegravity.contactpicker.core.ContactPickerActivity"
