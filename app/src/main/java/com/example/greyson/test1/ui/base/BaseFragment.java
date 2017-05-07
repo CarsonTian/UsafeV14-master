@@ -21,7 +21,6 @@ public abstract class BaseFragment extends RxFragment {
     protected Context mContext;
     protected Retrofit mRetrofit = WSAppContext.getInstance().getRetrofit();
     protected Retrofit mRetrofit2 = WSAppContext.getInstance().getRetrofit2();
-    protected Retrofit mRetrofit3 = WSAppContext.getInstance().getRetrofit3();
     protected Resources mResources = WSAppContext.getInstance().getmResources();
 
     @Override

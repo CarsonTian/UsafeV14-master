@@ -19,7 +19,7 @@ public class WSAppContext extends Application{
     private Resources mResources;
     private Retrofit mRetrofit;
     private Retrofit mRetrofit2;
-    private Retrofit mRetrofit3;
+
 
     @Override
     public void onCreate() {
@@ -33,7 +33,6 @@ public class WSAppContext extends Application{
         mResources = mContext.getResources();
         mRetrofit = NetWorkApi.getInstance().gradleRetrofit(this);
         mRetrofit2 = NetWorkApi2.getInstance().gradleRetrofit(this);
-        mRetrofit3 = NetWorkApi3.getInstance().gradleRetrofit(this);
 
     }
 
@@ -55,7 +54,6 @@ public class WSAppContext extends Application{
     public synchronized Retrofit getRetrofit2() {
         return mRetrofit2;
     }
-    public synchronized Retrofit getRetrofit3() { return mRetrofit3; }
 
 
 
