@@ -172,11 +172,10 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                         cdv.start();
                         time0.setVisibility(View.GONE);
                         time1.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Notice")
-                                .setContentText("Please Make Sure Your SIM Card Is Working..")
-                                .setConfirmText("OK")
+                                .setContentText(String.valueOf(R.string.no_phone_number))
                                 .show();
                     }
                 }
@@ -254,14 +253,14 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     .setConfirmText("OK")
                     .show();
             return false;
-        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) < 5){
+        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) < 5 ){
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
                     .setContentText("Please Make Sure Time Is Longer Than 5 Min.")
                     .setConfirmText("OK")
                     .show();
             return false;
-        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) > 30) {
+        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) > 60) {
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
                     .setContentText("Please Make Sure Time Is Shorter Than 30 Min")
@@ -269,7 +268,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     .show();
             return false;
         } else {
-            totalTimeCountInMilliseconds = 60 * Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
+            totalTimeCountInMilliseconds = Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
             cusTime = edtTimerValue.getText().toString().trim();
             return true;
         }
