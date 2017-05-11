@@ -37,7 +37,7 @@ import static android.content.Context.MODE_PRIVATE;
  * @author Greyson, Carson
  * @version 1.0
  */
-public class SafetyTrackFragment extends BaseFragment implements View.OnClickListener {
+public class SafetyTrackFragment extends BaseFragment implements View.OnClickListener{
 
     private static final int REQUEST_GET_DEVICEID = 222;
 
@@ -53,6 +53,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private Runnable wTimer;
     private Handler mHandler;
     private MediaPlayer mp;
+
     private CountDownView2 cdv;
 
     private SharedPreferences preferences;
@@ -82,9 +83,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
         buttonStartTime.setOnClickListener(this);
         buttonStopTime.setOnClickListener(this);
-
-        mp = new MediaPlayer();
-        checkMediaPlayerPermission();
 
         cdv = (CountDownView2) view.findViewById(R.id.countdownview2);
         //cdv.setInitialTime(0); // Initial time of 5 seconds.
@@ -201,13 +199,14 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void checkMediaPlayerPermission() {
-        try {
-            mp.setDataSource(mContext, RingtoneManager
-                    .getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-            mp.prepare();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mp = new MediaPlayer();
+            try {
+                mp.setDataSource(mContext, RingtoneManager
+                        .getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+                mp.prepare();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
     }
 
     private void checkDeviceIDPermission() {
@@ -253,7 +252,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     .setConfirmText("OK")
                     .show();
             return false;
-        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) < 5 ){
+        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) < 0 ){
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
                     .setContentText("Please Make Sure Time Is Longer Than 5 Min.")
@@ -281,6 +280,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             public void timerElapsed() {
                 cdv.stop();
                 dialog();
+                checkMediaPlayerPermission();
                 mp.start();
                 mHandler.postDelayed(wTimer, 60000);
             }

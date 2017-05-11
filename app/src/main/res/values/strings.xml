@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">USafe</string>
+    <string name="app_name">SecureTrip</string>
     <string name="google_maps_api_key">AIzaSyB6yMoK98piZ4RRQ0n3o6nJvLTNZBGWOvQ</string>
     <string-array name="changepin_array">
         <item>Assault (Red)</item>

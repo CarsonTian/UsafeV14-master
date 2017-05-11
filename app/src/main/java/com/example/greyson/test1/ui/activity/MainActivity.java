@@ -30,7 +30,6 @@ import com.example.greyson.test1.ui.fragment.SafetyMoreFragment;
 import com.example.greyson.test1.ui.fragment.SafetyTrackFragment;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -63,7 +62,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void initView() {
         Toolbar toolbar = findView(R.id.toolbar);
         AppCompatTextView tvTitle = findView(R.id.tv_title);
-        tvTitle.setText("U-Safe");
+        tvTitle.setText(R.string.app_name);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
