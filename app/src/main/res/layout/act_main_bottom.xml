@@ -5,13 +5,12 @@
     android:background="@android:color/white"
     android:orientation="horizontal"
     >
-
     <LinearLayout
-        android:id="@+id/ll_safetymap"
+        android:id="@+id/ll_safetymore"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/bbutton1"
+        android:background="@drawable/bbutton4"
         android:gravity="center"
         android:orientation="vertical"
         >
@@ -22,6 +21,7 @@
             android:textSize="30px" />
 
     </LinearLayout>
+
     <View
         android:layout_width="1px"
         android:background="@color/colorLine"
@@ -66,12 +66,13 @@
         android:layout_width="1px"
         android:background="@color/colorLine"
         android:layout_height="match_parent"/>
+
     <LinearLayout
-        android:id="@+id/ll_safetymore"
+        android:id="@+id/ll_safetymap"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/bbutton4"
+        android:background="@drawable/bbutton1"
         android:gravity="center"
         android:orientation="vertical"
         >
@@ -82,5 +83,4 @@
             android:textSize="30px" />
 
     </LinearLayout>
-
 </LinearLayout>

@@ -104,6 +104,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         String str = bundle.getString("menu");
+        if (str == null) {
+            str = "button";
+        }
         switch (str) {
             case "map":
                 toolbar.setBackgroundColor(getResources().getColor(R.color.mapMenuBg));
