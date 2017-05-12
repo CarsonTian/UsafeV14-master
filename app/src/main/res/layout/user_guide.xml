@@ -16,42 +16,34 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:gravity="center"
+            android:gravity="left|center"
             android:orientation="vertical"
             android:weightSum="1">
 
-            <ImageView
-                android:id="@+id/textView4"
-                android:layout_width="340dp"
-                android:layout_height="270dp"
-                android:background="@drawable/guide11" />
 
             <ImageView
-                android:id="@+id/textView8"
-                android:layout_width="340dp"
-                android:layout_height="270dp"
-                android:background="@drawable/guide22" />
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/guidetitle4" />
 
             <ImageView
-                android:id="@+id/textView5"
-                android:layout_width="340dp"
-                android:layout_height="270dp"
-                android:background="@drawable/guide33" />
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/guidetitle1" />
 
             <ImageView
-                android:id="@+id/textView9"
-                android:layout_width="340dp"
-                android:layout_height="270dp"
-                android:background="@drawable/guide44" />
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/guidetitle2" />
 
             <ImageView
-                android:id="@+id/textView11"
-                android:layout_width="340dp"
-                android:layout_height="270dp"
-                android:background="@drawable/guide55" />
-
-
-
+                android:id="@+id/imageView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/guidetitle3" />
         </LinearLayout>
     </ScrollView>
 

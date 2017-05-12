@@ -7,9 +7,9 @@
     <color name="colorWhite">#ffffff</color>
     <color name="textColorBlue">#0063b0</color>
     <color name="welcomeMenuBg3">#d01881e2</color>
-    <color name="welcomeMenuBg2">#d0854de7</color>
+    <color name="welcomeMenuBg2">#00b712</color>
     <color name="welcomeMenuBg">#9220AB</color>
-    <color name="textbg">#dda0dd</color>
+    <color name="textbg">#ffa66b</color>
     <color name="emergencyMenuBg">#c9181b</color>
     <color name="buttonMenuBg">#f57824</color>
     <color name="travelMenuBg">#ffcd05</color>
@@ -19,6 +19,7 @@
 
     <!-- Light Colors -->
     <color name="text_color_primary_light">#FF212121</color>
+    <color name="title_bar_black">#000000</color>
     <color name="text_color_secondary_light">#FFBDBDBD</color>
     <color name="contact_badge_line_light">#ffffffff</color>
     <color name="contact_badge_triangle_light">#cc1f1f1f</color>

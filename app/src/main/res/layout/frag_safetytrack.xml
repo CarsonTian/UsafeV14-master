@@ -10,56 +10,81 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="156dp"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:weightSum="1">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="114dp"
+            android:layout_height="44dp"
             android:gravity="center"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:weightSum="1">
 
-            <WebView
-                android:id="@+id/upWeb"
-                android:layout_width="match_parent"
-                android:layout_height="51dp"
-                android:visibility="gone" />
+        </LinearLayout>
 
-            <LinearLayout
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.13"
+                custom:srcCompat="@drawable/remindicon" />
+
+            <TextView
+                android:id="@+id/textView10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1">
-
-                <ImageView
-                    android:id="@+id/imageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    custom:srcCompat="@drawable/reminderlogo" />
-
-                <TextView
-                    android:id="@+id/durTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text=" Remind me after every"
-                    android:textAlignment="textStart"
-                    android:textSize="24sp" />
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/edtTimerValue"
-                android:layout_width="131dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="(5-30) min"
-                android:inputType="phone"
+                android:text="  Tracker Mode:  "
                 android:textAlignment="center"
                 android:textSize="24sp" />
 
+            <Spinner
+                android:id="@+id/mode_spinner"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.19" />
+
         </LinearLayout>
+
+        <WebView
+            android:id="@+id/upWeb"
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/durTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Remind me after"
+                android:textAlignment="textStart"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/edtTimerValue"
+            android:layout_width="131dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="(5-30) min"
+            android:inputType="phone"
+            android:textAlignment="center"
+            android:textSize="24sp" />
 
     </LinearLayout>
 
@@ -75,7 +100,7 @@
             android:gravity="center"
             android:text="00:00"
             android:textAlignment="center"
-            android:textSize="80dp" />
+            android:textSize="80sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -110,7 +135,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@drawable/startbutton"
+            android:background="@drawable/trackerstart"
             android:gravity="center" />
 
         <Button
@@ -118,7 +143,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:background="@drawable/endbutton"
+            android:background="@drawable/trackerend"
             android:gravity="center"
             android:visibility="gone" />
 

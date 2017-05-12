@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/safetymaptext"
+        android:background="@drawable/bbutton1"
         android:gravity="center"
         android:orientation="vertical"
         >
@@ -31,7 +31,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/panicbuttontext"
+        android:background="@drawable/bbutton2"
         android:gravity="center"
         android:orientation="vertical"
         >
@@ -51,7 +51,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/tttuttomtext"
+        android:background="@drawable/bbutton3"
         android:gravity="center"
         android:orientation="vertical"
         >
@@ -71,7 +71,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/emergencytexticon"
+        android:background="@drawable/bbutton4"
         android:gravity="center"
         android:orientation="vertical"
         >

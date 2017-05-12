@@ -15,9 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.greyson.test1.R;
 import com.example.greyson.test1.core.TimerListener;
@@ -37,7 +41,7 @@ import static android.content.Context.MODE_PRIVATE;
  * @author Greyson, Carson
  * @version 1.0
  */
-public class SafetyTrackFragment extends BaseFragment implements View.OnClickListener{
+public class SafetyTrackFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener{
 
     private static final int REQUEST_GET_DEVICEID = 222;
 
@@ -45,6 +49,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
     private Button buttonStartTime, buttonStopTime;
     private EditText edtTimerValue;
+    private TextView durTitle;
     private WebView upWeb;
     private LinearLayout time0;
     private LinearLayout time1;
@@ -64,16 +69,13 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     /**
      * This method is used to initialize the map view and request the current location
      *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
      */
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.frag_safetytrack, container, false);
 
         mHandler = new Handler();
+        durTitle = (TextView) view.findViewById(R.id.durTitle);
         upWeb = (WebView) view.findViewById(R.id.upWeb);
         edtTimerValue = (EditText) view.findViewById(R.id.edtTimerValue);
         buttonStartTime = (Button) view.findViewById(R.id.btnStartTime);
@@ -83,6 +85,13 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
         buttonStartTime.setOnClickListener(this);
         buttonStopTime.setOnClickListener(this);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
+                R.array.mode, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner modeSpinner = (Spinner) view.findViewById(R.id.mode_spinner);
+        modeSpinner.setAdapter(adapter);
+        modeSpinner.setOnItemSelectedListener(this);
 
         cdv = (CountDownView2) view.findViewById(R.id.countdownview2);
         //cdv.setInitialTime(0); // Initial time of 5 seconds.
@@ -138,9 +147,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     /**
      * request permission
      *
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -348,5 +354,22 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
     private void finishUpload() {
         upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/update/?deviceid=" + id + tStamp + "&status=reached&lat=" + cLatitude + "&lng=" + cLngtitude);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        switch (parent.getSelectedItemPosition()) {
+            case 0:
+                durTitle.setText(R.string.one_trip);
+                break;
+            case 1:
+                durTitle.setText(R.string.period);
+                break;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

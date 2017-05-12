@@ -8,9 +8,10 @@
         <item>Theft/Robbery (Green)</item>
         <item>Others (Yellow)</item>
     </string-array>
-    <string-array name="time_selection">
-        <item>At the end</item>
-        <item>customize</item>
+
+    <string-array name="mode">
+        <item>One Trip</item>
+        <item>Period</item>
     </string-array>
 
     <string name="light_theme">Light Theme</string>
@@ -26,5 +27,7 @@
     <string name="cp_actionmode_selected">%d selected</string>
     <string name="cp_limit_reached">You can\'t pick more than %d contacts!</string>
     <string name="no_phone_number">Please check your SIM card</string>
+    <string name="one_trip">Remind me after</string>
+    <string name="period">Remind me every</string>
 
 </resources>

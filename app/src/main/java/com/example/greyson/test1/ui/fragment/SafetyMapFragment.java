@@ -307,7 +307,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
             }
         } catch (Exception e) {
         }
-        polylineOpt.color(R.color.welcomeMenuBg);
+        polylineOpt.color(R.color.mapMenuBg);
         Polyline line = googleMap.addPolyline(polylineOpt);
         line.setWidth(18);
     }

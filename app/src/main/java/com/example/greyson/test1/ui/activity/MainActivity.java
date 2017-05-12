@@ -42,6 +42,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout mLLSafetyButton;
     private LinearLayout mLLSafetyTrack;
     private LinearLayout mLLSafetyMore;
+    private Toolbar toolbar;
     private FragmentManager mFragmentManager;
 
     private List<BaseFragment> mFragments = new ArrayList<>();
@@ -60,7 +61,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void initView() {
-        Toolbar toolbar = findView(R.id.toolbar);
+        toolbar = findView(R.id.toolbar);
         AppCompatTextView tvTitle = findView(R.id.tv_title);
         tvTitle.setText(R.string.app_name);
         setSupportActionBar(toolbar);
@@ -105,16 +106,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         String str = bundle.getString("menu");
         switch (str) {
             case "map":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.mapMenuBg));
                 mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyMapFragment, "0").commitAllowingStateLoss();
                 mCurrentIndex = 0;
                 mLLSafetyMap.setSelected(true);
                 break;
             case "button":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.buttonMenuBg));
                 mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyButtonFragment, "3").commitAllowingStateLoss();
                 mCurrentIndex = 3;
                 mLLSafetyMap.setSelected(true);
                 break;
             case "track":
+                toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyTrackFragment, "1").commitAllowingStateLoss();
                 mCurrentIndex = 1;
                 mLLSafetyMap.setSelected(true);
@@ -219,14 +223,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.ll_safetymap:
                 index = 0;
+                toolbar.setBackgroundColor(getResources().getColor(R.color.mapMenuBg));
                 mLLSafetyMap.setSelected(true);
                 break;
             case R.id.ll_safetybutton:
                 index = 3;
+                toolbar.setBackgroundColor(getResources().getColor(R.color.buttonMenuBg));
                 mLLSafetyButton.setSelected(true);
                 break;
             case R.id.ll_safetytrack:
                 index = 1;
+                toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 mLLSafetyTrack.setSelected(true);
                 break;
             case R.id.ll_safetymore:
