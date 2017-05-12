@@ -212,32 +212,13 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
 
         SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE);
         sweetAlertDialog.setTitleText("About Us")
-                .setContentText("Do You Want To Know More About Us?")
-                .setConfirmText("Yes")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        try {
-                            Intent intent3 = new Intent(Intent.ACTION_VIEW,Uri.parse("https://mahara.infotech.monash.edu.au/mahara/view/view.php?t=yYd0GEPVat6c7ezjvRKr"));
-                            startActivity(intent3);
-                            sweetAlertDialog.dismiss();
-                        } catch (Exception e){}
-                    }
-                })
-                .setCancelText("Later")
-                .showCancelButton(true)
-                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        sweetAlertDialog.dismiss();
-                    }
-                })
+                .setContentText("Team Name: HexTech?")
                 .show();
     }
 
     private void showCheckDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Are You Sure Call 000 ?")
+                .setTitleText("Call 000 ?")
                 .setCancelText("No")
                 .showCancelButton(true)
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -252,7 +233,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
                         Intent intent0 = new Intent(Intent.ACTION_CALL);
-                        intent0.setData(Uri.parse("tel:000"));
+                        intent0.setData(Uri.parse("tel:0"));
                         if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             checkCallPermission();
                             return;

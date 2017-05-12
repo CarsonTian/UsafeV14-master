@@ -65,6 +65,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private SweetAlertDialog sweetAlertDialog;
 
     private String aa="";
+    private boolean modeState = true;
 
     /**
      * This method is used to initialize the map view and request the current location
@@ -294,21 +295,35 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void dialog() {
-         sweetAlertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+        sweetAlertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Alarm")
-                .setContentText("Are You Safe? You Have 1 Min To Confirm")
-                .setConfirmText("Continue")
-                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                    @Override
-                    public void onClick(SweetAlertDialog sweetAlertDialog) {
-                        cdv.setInitialTime(totalTimeCountInMilliseconds);
-                        cdv.start();
-                        mHandler.removeCallbacks(wTimer);
-                        mp.stop();
-                        uploadData();
-                        sweetAlertDialog.dismiss();
-                    }
-                });
+                .setContentText("Are You Safe? You Have 1 Min To Confirm");
+        if (modeState) {
+            sweetAlertDialog.setConfirmText("Finish");
+            sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    mp.stop();
+                    mHandler.removeCallbacks(wTimer);
+                    finishUpload();
+                    sweetAlertDialog.dismiss();
+                }
+            });
+        } else {
+            sweetAlertDialog.setConfirmText("Continue");
+            sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    cdv.setInitialTime(totalTimeCountInMilliseconds);
+                    cdv.start();
+                    mHandler.removeCallbacks(wTimer);
+                    mp.stop();
+                    uploadData();
+                    sweetAlertDialog.dismiss();
+                }
+            });
+        }
+
         sweetAlertDialog.setCanceledOnTouchOutside(false);
         sweetAlertDialog.show();
     }
@@ -361,9 +376,11 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         switch (parent.getSelectedItemPosition()) {
             case 0:
                 durTitle.setText(R.string.one_trip);
+                modeState = true;
                 break;
             case 1:
                 durTitle.setText(R.string.period);
+                modeState = false;
                 break;
         }
     }
