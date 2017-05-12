@@ -262,14 +262,14 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) < 0 ){
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
-                    .setContentText("Please Make Sure Time Is Longer Than 5 Min.")
+                    .setContentText("Please make sure time is longer than 5 min.")
                     .setConfirmText("OK")
                     .show();
             return false;
         } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) > 60) {
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
-                    .setContentText("Please Make Sure Time Is Shorter Than 30 Min")
+                    .setContentText("Please make sure time is shorter than 30 min")
                     .setConfirmText("OK")
                     .show();
             return false;
@@ -297,7 +297,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private void dialog() {
         sweetAlertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Alarm")
-                .setContentText("Are You Safe? You Have 1 Min To Confirm");
+                .setContentText("Are you safe? you have 1 min to confirm");
         if (modeState) {
             sweetAlertDialog.setConfirmText("Finish");
             sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -331,7 +331,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private void warningDialog() {
         SweetAlertDialog sweetAlertDialog1 = new SweetAlertDialog(mContext,SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Alarm")
-                .setContentText("We Have Sent Warning Messages, Please Contact Your Friends")
+                .setContentText("We have sent warning messages, please contact your friends")
                 .setConfirmText("Yes")
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
