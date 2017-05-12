@@ -9,7 +9,7 @@ import com.example.greyson.test1.R;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private final int SPLASH_DISPLAY_LENGHT = 1000;
+    private final int SPLASH_DISPLAY_LENGHT = 1500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

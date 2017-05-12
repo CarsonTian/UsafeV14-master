@@ -82,6 +82,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
     private SharedPreferences preferences;
     private String cloLocation;
     private boolean hidePin;
+    private int firstLogin;
 
     /**
      * This method is used to initialize the map view and request the current location
@@ -191,15 +192,19 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         }
     }
 
+    private void moveCamera(int zoomLevel) {
+        final LatLng latLng = getCurrentLocation();                                             // Get the latitude and lontitude current location
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));                   // Move the camera to the current location
+        googleMap.animateCamera(CameraUpdateFactory.zoomTo(zoomLevel));                       // Add the defult zoom value
+    }
     /**
      *  This method is used to get the safe places locations from server database and mark them
      */
     private void handleNewLocation() {
         final LatLng latLng = getCurrentLocation();                                             // Get the latitude and lontitude current location
-        if (mLLSafePlace.isSelected() || mLLSafePlace.isSelected()) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));                   // Move the camera to the current location
-            googleMap.animateCamera(CameraUpdateFactory.zoomTo(14));                       // Add the defult zoom value
-        }
+        //if (mLLSafePlace.isSelected() || mLLSafePlace.isSelected()) {
+        moveCamera(14);                      // Add the defult zoom value
+        //}
         Map<String, String> params = new HashMap<>();                                       // Store the params of the URL which is used to request corresponding data from server database
         params.put("lat", String.valueOf(latLng.latitude));
         params.put("lng", String.valueOf(latLng.longitude));
@@ -223,7 +228,38 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
                         requestRoute(latLng);
                     }
                 });
-            loadAllPinFromServer();//
+        loadAllPinFromServer();//
+    }
+
+    /**
+     *  This method is used to get the safe places locations from server database and mark them
+     */
+    private void handleNewLocationUpdate() {
+        final LatLng latLng = getCurrentLocation();                                             // Get the latitude and lontitude current location
+        Map<String, String> params = new HashMap<>();                                       // Store the params of the URL which is used to request corresponding data from server database
+        params.put("lat", String.valueOf(latLng.latitude));
+        params.put("lng", String.valueOf(latLng.longitude));
+        mRetrofit.create(WSNetService.class)                                                 // Create a listener to observe the change of the server database and update the local data
+                .getSafePlaceData(params)
+                .subscribeOn(Schedulers.io())
+                .compose(this.<SafePlaceRes>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<SafePlaceRes>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(SafePlaceRes safePlaceRes) {                       // The action if the update is running
+                        showMarker(safePlaceRes);
+                        requestRoute(latLng);
+                    }
+                });
+        loadAllPinFromServer();//
     }
 
     private void handleNewLocationHide() {
@@ -307,7 +343,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
             }
         } catch (Exception e) {
         }
-        polylineOpt.color(R.color.mapMenuBg);
+        polylineOpt.color(R.color.welcomeMenuBg);
         Polyline line = googleMap.addPolyline(polylineOpt);
         line.setWidth(18);
     }
@@ -564,9 +600,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
 
     private void showAllMyPin() {
         googleMap.clear();
-        LatLng latLng = getCurrentLocation();
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+        moveCamera(10);
         showMyPinFromServer();
         googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -626,9 +660,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
      */
     private void initPlaceMap() {
         googleMap.clear();
-        LatLng latLng = getCurrentLocation();
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+        moveCamera(14);
         handleNewLocation();
         loadAllPinFromServer();
         ///showPinMap();//////////////////////
@@ -991,7 +1023,6 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         Double lng = b.getDouble("lng");
         String tag = b.getString("tag");
 
-        //String zindex = b.getString("zindex");
         String pinStatus = b.getString("status");
 
         if (pinStatus.equals("old")) {
@@ -1172,9 +1203,13 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
     public void onLocationChanged(Location location) {
         if (hidePin) {
             handleNewLocationHide();
-        } else if (mFAB.isSelected() == false && !this.isHidden() && !mTvSafetyPlace.getText().toString().equals("Show Safety Map")) {
-            googleMap.clear();
-            handleNewLocation();}
+        } else if (firstLogin == 0) {
+            handleNewLocation();
+            firstLogin = 1;
+        } else if (!mFAB.isSelected() && !this.isHidden() && !mTvSafetyPlace.getText().toString().equals("Show Safety Map")) {
+                googleMap.clear();
+                handleNewLocationUpdate();
+        }
     }
 
     /**
@@ -1182,6 +1217,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
      */
     @Override
     public void onResume() {
+        firstLogin = 0;
         super.onResume();
         mGoogleApiClient.connect();
     }

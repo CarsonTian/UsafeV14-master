@@ -28,6 +28,7 @@ public class CountDownView extends RelativeLayout {
     private Intent mTimerIntent;
     private String mAlarmSoundPath;
     private TimerListener listener;
+    private boolean resetT = false;
 
     private static final Calendar mTime = Calendar.getInstance();
     private static final DecimalFormat mFormatter = new DecimalFormat("00");
@@ -40,7 +41,11 @@ public class CountDownView extends RelativeLayout {
                 mIsAlarmRunning = true;
                 onCountDownFinished();
             }
-            updateUI(mCurrentMillis);
+            if (resetT == false) {
+                updateUI(mCurrentMillis);
+            } else if (resetT == true) {
+                mCurrentMillis = 10000;
+            }
         }
     });
 
@@ -148,6 +153,7 @@ public class CountDownView extends RelativeLayout {
         if(mAlarmSoundPath != null)
             mTimerIntent.putExtra("alarm_sound", mAlarmSoundPath);
         getContext().startService(mTimerIntent);
+        resetT = false;
     }
 
     /**
@@ -166,6 +172,7 @@ public class CountDownView extends RelativeLayout {
         stop();
         mCurrentMillis = mBeginTime;
         updateUI(mCurrentMillis);
+        resetT = true;
     }
 
     /**

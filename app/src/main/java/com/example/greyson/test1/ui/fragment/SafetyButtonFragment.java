@@ -76,7 +76,6 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     private TextView mTVContactName3;
     private TextView mTVSettingButton;
     private TextView mTVStartButton;
-    private TextView mTVResetButton;
 
     private CountDownView cdv;
 
@@ -107,7 +106,6 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
 
         mTVSettingButton = (TextView) view.findViewById(R.id.tv_contactSetting);
         mTVStartButton = (TextView) view.findViewById(R.id.tv_startButton);
-        mTVResetButton = (TextView) view.findViewById(R.id.tv_ResetButton);
         mTVContactName1 = (TextView) view.findViewById(R.id.tv_contactName1);
         mTVContactName2 = (TextView) view.findViewById(R.id.tv_contactName2);
         mTVContactName3 = (TextView) view.findViewById(R.id.tv_contactName3);
@@ -314,7 +312,6 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     @Override
     protected void initEvent() {
         mTVStartButton.setOnClickListener(this);
-        mTVResetButton.setOnClickListener(this);
         mTVSettingButton.setOnClickListener(this);
     }
 
@@ -324,21 +321,13 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
      */
     @Override
     public void onClick(View v) {
-        mTVStartButton.setSelected(false);
-        mTVResetButton.setSelected(false);
         mTVSettingButton.setSelected(false);
         switch (v.getId()) {
             case R.id.tv_startButton:
-                mTVStartButton.setSelected(true);
+                //mTVStartButton.setSelected(true);
                 //mLLSettingButton.setSelected(false);
                 //mLLCancelButton.setSelected(false);
                 startTimer();
-                break;
-            case R.id.tv_ResetButton:
-                mTVResetButton.setSelected(true);
-                //mLLStartButton.setSelected(false);
-                //mLLSettingButton.setSelected(false);
-                resetTimer();
                 break;
             case R.id.tv_contactSetting:
                 mTVSettingButton.setSelected(true);
@@ -361,8 +350,16 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
 
     private void startTimer() {
         if(!checkEmergencyContactEmpty() && checkSMSPermission()) {
-            cdv.start();
-            startNotification();
+            if (!mTVStartButton.isSelected()) {
+                mTVStartButton.setBackgroundResource(R.drawable.buttonreset);
+                mTVStartButton.setSelected(true);
+                cdv.start();
+                startNotification();
+            } else if (mTVStartButton.isSelected()) {
+                mTVStartButton.setBackgroundResource(R.drawable.buttonactivate);
+                mTVStartButton.setSelected(false);
+                resetTimer();
+            }
         }
     }
 
@@ -516,6 +513,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         if (resultCode == 0) {
             switch (requestCode) {
                 case RESULT_PICK_CONTACT:
+                    clearEmergencyContact();
                     loadEmergencyContact();
                     break;
             }
@@ -567,6 +565,12 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         return true;
     }
 
+    private void clearEmergencyContact() {
+        mTVContactName1.setText("");
+        mTVContactName2.setText("");
+        mTVContactName3.setText("");
+    }
+
     private void loadEmergencyContact() {
         preferences = mContext.getSharedPreferences("UserSetting",MODE_PRIVATE);
         String contact1 = preferences.getString("contact1",null);
@@ -591,8 +595,6 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     @Override
     public void onResume() {
         super.onResume();
-
-
         Bundle b = getArguments();
         if (b != null) {
             int extra = b.getInt("notification");
