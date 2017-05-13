@@ -36,8 +36,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 /**
- * Tis class is about tracker function
- *
+ * This class is the method which trail tracker.
+ * System can remind user regularly or at the end of travel to check if user is safe.
+ * If user is not safe, server will send message to user's friend who set as emergence contact by user
  * @author Greyson, Carson
  * @version 1.0
  */
@@ -55,21 +56,25 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private Runnable wTimer;
     private Handler mHandler;
     private MediaPlayer mp;
-    private CountDownView2 cdv;
-    private SharedPreferences preferences;
+    private CountDownView2 cdv;                  // Count down timer service
+    private SharedPreferences preferences;       // Receive data from other fragments
     private SweetAlertDialog sweetAlertDialog;
-    private String saveTime="";
+    private String saveTime="";                  // The state data of timer
     private boolean modeState = true;
 
     /**
-     * This method is used to initialize the map view and request the current location
-     *
+     * This method will be called when this fragment created.
+     * It is used to initial all elements.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
      */
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.frag_safetytrack, container, false);
 
-        mHandler = new Handler();
+        mHandler = new Handler();                                                                        // The timer of sending message
         durTitle = (TextView) view.findViewById(R.id.durTitle);
         upWeb = (WebView) view.findViewById(R.id.upWeb);
         edtTimerValue = (EditText) view.findViewById(R.id.edtTimerValue);
@@ -81,6 +86,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         buttonStartTime.setOnClickListener(this);
         buttonStopTime.setOnClickListener(this);
 
+        // Spinner setting
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
                 R.array.mode, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -88,13 +94,12 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         modeSpinner.setAdapter(adapter);
         modeSpinner.setOnItemSelectedListener(this);
 
-        cdv = (CountDownView2) view.findViewById(R.id.countdownview2);
-        //cdv.setInitialTime(0); // Initial time of 5 seconds.
+        cdv = (CountDownView2) view.findViewById(R.id.countdownview2);                                    // Count down timer
 
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences("timeResume", MODE_PRIVATE);
-        edtTimerValue.setText(sharedPreferences.getString("time",""));
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences("timeResume", MODE_PRIVATE);  // Safe the data when fragment is destroyed
+        edtTimerValue.setText(sharedPreferences.getString("time",""));                                    // Display the data saved
 
-
+        // Check if there is saved data from last timer to judge if a timer need to be started
         if (!sharedPreferences.getString("time", "").trim().equals("")) {
             saveTime = edtTimerValue.getText().toString().trim();
             buttonStartTime.setVisibility(View.GONE);
@@ -107,7 +112,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             tStamp = sharedPreferences.getString("tId", "");
         }
 
-
+        // Sending message timer
         wTimer = new Runnable() {
             @Override
             public void run() {
@@ -117,11 +122,14 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         return view;
     }
 
+    /**
+     * This method is used to initial data from other fragments
+     */
     @Override
     protected void initData() {
-        getCurrentLocation();
-        checkDeviceIDPermission();
-        getMobileIMEI();
+        getCurrentLocation();       // Get current location
+        checkDeviceIDPermission();  // Check permission of getting state of phone
+        getMobileIMEI();            // Get IMEI and number of phone
         preferences = mContext.getSharedPreferences("UserSetting",MODE_PRIVATE);
     }
 
