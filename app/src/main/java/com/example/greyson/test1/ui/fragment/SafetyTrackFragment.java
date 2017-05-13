@@ -44,9 +44,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class SafetyTrackFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener{
 
     private static final int REQUEST_GET_DEVICEID = 222;
-
-    private String id, tStamp, cusTime, number, Contact1, Contact2, Contact3, cLatitude, cLngtitude;
-
+    private String id, tStamp, cusTime, number,cLatitude, cLngtitude;
     private Button buttonStartTime, buttonStopTime;
     private EditText edtTimerValue;
     private TextView durTitle;
@@ -54,17 +52,13 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private LinearLayout time0;
     private LinearLayout time1;
     private long totalTimeCountInMilliseconds;
-
     private Runnable wTimer;
     private Handler mHandler;
     private MediaPlayer mp;
-
     private CountDownView2 cdv;
-
     private SharedPreferences preferences;
     private SweetAlertDialog sweetAlertDialog;
-
-    private String aa="";
+    private String saveTime="";
     private boolean modeState = true;
 
     /**
@@ -102,7 +96,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
 
         if (!sharedPreferences.getString("time", "").trim().equals("")) {
-            aa = edtTimerValue.getText().toString().trim();
+            saveTime = edtTimerValue.getText().toString().trim();
             buttonStartTime.setVisibility(View.GONE);
             buttonStopTime.setVisibility(View.VISIBLE);
             edtTimerValue.setVisibility(View.GONE);
@@ -140,7 +134,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     protected void destroyView() {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("timeResume", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("time", aa);
+        editor.putString("time", saveTime);
         editor.putString("tId", tStamp);
         editor.commit();
     }
@@ -168,7 +162,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             if (setNamCan()) {
                 if (setTimer()) {
                     if (!number.trim().equals("")) {
-                        aa = edtTimerValue.getText().toString().trim();
+                        saveTime = edtTimerValue.getText().toString().trim();
                         buttonStartTime.setVisibility(View.GONE);
                         buttonStopTime.setVisibility(View.VISIBLE);
                         edtTimerValue.setVisibility(View.GONE);
@@ -192,7 +186,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                         .show();
             }
         } else if (v.getId() == R.id.btnStopTime) {
-            aa = "";
+            saveTime = "";
             buttonStartTime.setVisibility(View.VISIBLE);
             buttonStopTime.setVisibility(View.GONE);
             edtTimerValue.setVisibility(View.VISIBLE);
@@ -259,14 +253,14 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     .setConfirmText("OK")
                     .show();
             return false;
-        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) < 0 ){
+        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) < 1 ){
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
                     .setContentText("Please make sure time is longer than 5 min.")
                     .setConfirmText("OK")
                     .show();
             return false;
-        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) > 60) {
+        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) > 30) {
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
                     .setContentText("Please make sure time is shorter than 30 min")
@@ -274,7 +268,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     .show();
             return false;
         } else {
-            totalTimeCountInMilliseconds = Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
+            totalTimeCountInMilliseconds = 60 * Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
             cusTime = edtTimerValue.getText().toString().trim();
             return true;
         }
@@ -331,14 +325,14 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private void warningDialog() {
         SweetAlertDialog sweetAlertDialog1 = new SweetAlertDialog(mContext,SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Alarm")
-                .setContentText("We have sent warning messages, please contact your friends")
+                .setContentText("We have sent warning messages, please contact " + preferences.getString("contact1", "").trim().split(";")[1] + ", " + preferences.getString("contact2", "").trim().split(";")[1] + ", " + preferences.getString("contact3", "").trim().split(";")[1])
                 .setConfirmText("Yes")
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog1) {
                         sweetAlertDialog1.dismiss();
                         sweetAlertDialog.dismiss();
-                        aa = "";
+                        saveTime = "";
                         buttonStartTime.setVisibility(View.VISIBLE);
                         buttonStopTime.setVisibility(View.GONE);
                         edtTimerValue.setVisibility(View.VISIBLE);
