@@ -126,8 +126,9 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     @Override
     protected void initData() {
         getCurrentLocation();
-        checkDeviceIDPermission();
-        getMobileIMEI();
+        if (checkDeviceIDPermission()) {
+            getMobileIMEI();
+        }
         preferences = mContext.getSharedPreferences("UserSetting",MODE_PRIVATE);
     }
 
@@ -216,17 +217,13 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             }
     }
 
-    private void checkDeviceIDPermission() {
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.SEND_SMS)
+    private boolean checkDeviceIDPermission() {
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_PHONE_STATE)) {
-
-            } else {
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_GET_DEVICEID);
-            }
-        } else {
-            getMobileIMEI();
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_GET_DEVICEID);
+            return false;
         }
+        return true;
     }
 
     private void getMobileIMEI() {

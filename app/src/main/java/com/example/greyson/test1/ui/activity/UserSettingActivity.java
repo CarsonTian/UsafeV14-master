@@ -1,9 +1,12 @@
 package com.example.greyson.test1.ui.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.provider.ContactsContract;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
@@ -57,7 +60,8 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
     private SharedPreferences preferences;
     private String userName;
     private static final int REQUEST_CONTACT = 011;
-    private static final int RESULT_PICK_CONTACT = 012;
+    private static final int REQUEST_SMS = 012;
+    private static final int RESULT_PICK_CONTACT = 013;
 
     @Override
     protected int getLayoutRes() {
@@ -138,11 +142,15 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
         switch (v.getId()) {
             case R.id.tv_addContact:
                 mTVAddContact.setSelected(true);
-                addContacts1();
+                if (checkContactPermission()) {
+                    addContacts1();
+                }
                 break;
             case R.id.tv_saveContact:
                 mTVSaveContact.setSelected(true);
-                saveContacts();
+                if (checkSMSPermission()) {
+                    saveContacts();
+                }
                 break;
         }
     }
@@ -315,5 +323,23 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
             for (Group group : groups) {
             }
         }
+    }
+
+    private boolean checkContactPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CONTACT);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkSMSPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.SEND_SMS}, REQUEST_SMS);
+            return false;
+        }
+        return true;
     }
 }

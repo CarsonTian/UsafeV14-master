@@ -44,6 +44,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
     private static final int REQUEST_READ_CONTACT = 003;
     private static final int REQUEST_CALL_PHONE = 004;
     private static final int REQUEST_ALL_PERMISSION = 006;
+    private static final int REQUEST_GET_DEVICEID = 007;
     private static final int RESULT_PICK_CONTACT = 111;
 
     @Override
@@ -101,10 +102,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         String contact2 = preferences.getString("contact2",null);
         String contact3 = preferences.getString("contact3",null);
         if (contact1 == null && contact2 == null && contact3 == null) {
-            new SweetAlertDialog(this,SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Error!")
-                    .setContentText("You need choose at least one emergency contact.")
-                    .show();
+
             return true;
         } else if (contact1 != null) {
             if (!contact1.replace(";", " ").trim().isEmpty()) {
@@ -119,10 +117,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                 return false;
             }
         } else {
-            new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                    .setTitleText("Error!")
-                    .setContentText("You need choose at least one emergency contact.")
-                    .show();
+
             return true;
         }
         return true;
@@ -173,7 +168,9 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         Intent intent = new Intent(MenuActivity.this, MainActivity.class);
         switch (v.getId()) {
             case R.id.ll_emergencyCallMenu:
-                showCheckDialog();
+                if (checkCallPermission()) {
+                    showCheckDialog();
+                }
                 break;
             case R.id.ll_panicButtonMenu:
                 intent.putExtra("menu","button");
@@ -181,15 +178,19 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.ll_startTrackMenu:
                 intent.putExtra("menu","track");
-                startActivity(intent);
+                if (checkReadPhoneStatePermission()) {
+                    startActivity(intent);
+                }
                 break;
             case R.id.ll_safetyMapMenu:
                 intent.putExtra("menu","map");
-                startActivity(intent);
+                if (checkMapPermission()) {
+                    startActivity(intent);
+                }
                 break;
             case R.id.tv_userSetting:
                 Intent intent1 = new Intent(MenuActivity.this, UserSettingActivity.class);
-                startActivity(intent1);/////
+                startActivity(intent1);
                 break;
             case R.id.textlogo:
                 aboutUs();
@@ -218,7 +219,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
 
     private void showCheckDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Call 000 ?")
+                .setTitleText("Calling 000 ?")
                 .setCancelText("No")
                 .showCancelButton(true)
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -244,17 +245,34 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                 .show();
     }
 
-
+    private boolean checkMapPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_PHONE_STATE}, REQUEST_FINE_LOCATION);
+            return false;
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.READ_PHONE_STATE}, REQUEST_GET_DEVICEID);
+            return false;
+        }
+        return true;
+    }
 
     private boolean checkCallPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
                 != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
-                return true;
-            } else {
                 requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PHONE);
                 return false;
-            }
+        }
+        return true;
+    }
+
+    private boolean checkReadPhoneStatePermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_GET_DEVICEID);
+            return false;
         }
         return true;
     }
