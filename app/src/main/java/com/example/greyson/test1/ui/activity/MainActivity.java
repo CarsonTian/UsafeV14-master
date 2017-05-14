@@ -51,7 +51,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private SafetyTrackFragment mSafetyTrackFragment;
     private SafetyMoreFragment mSafetyMoreFragment;
 
+    private static final int REQUEST_FINE_LOCATION = 001;
     private static final int REQUEST_CALL_PHONE = 004;
+    private static final int REQUEST_GET_DEVICEID = 007;
     private int mCurrentIndex;
 
     @Override
@@ -225,6 +227,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mLLSafetyMore.setSelected(false);
         switch (v.getId()) {
             case R.id.ll_safetymap:
+                if (!checkMapPermission()) {return;}
                 index = 0;
                 toolbar.setBackgroundColor(getResources().getColor(R.color.mapMenuBg));
                 mLLSafetyMap.setSelected(true);
@@ -235,13 +238,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 mLLSafetyButton.setSelected(true);
                 break;
             case R.id.ll_safetytrack:
+                if (!checkReadPhoneStatePermission()) {return;}
                 index = 1;
                 toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 mLLSafetyTrack.setSelected(true);
                 break;
             case R.id.ll_safetymore:
                 index = mCurrentIndex;
-                showCheckDialog();
+                if (checkCallPermission()) {
+                    showCheckDialog();
+                }
                 break;
         }
         if (index == mCurrentIndex) {
@@ -292,12 +298,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private boolean checkCallPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE)
                 != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
-                return true;
-            } else {
-                requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PHONE);
-                return false;
-            }
+            requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, REQUEST_CALL_PHONE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkMapPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_PHONE_STATE}, REQUEST_FINE_LOCATION);
+            return false;
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE,Manifest.permission.READ_PHONE_STATE}, REQUEST_GET_DEVICEID);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkReadPhoneStatePermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_GET_DEVICEID);
+            return false;
         }
         return true;
     }
