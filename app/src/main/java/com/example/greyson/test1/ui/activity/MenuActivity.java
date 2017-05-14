@@ -178,7 +178,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.ll_startTrackMenu:
                 intent.putExtra("menu","track");
-                if (checkReadPhoneStatePermission()) {
+                if (checkMapPermission()) {
                     startActivity(intent);
                 }
                 break;
