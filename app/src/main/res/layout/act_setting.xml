@@ -243,7 +243,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Add Contact"
+                android:text="Add/Edit Contact"
                 android:textSize="45px" />
 
             <View
