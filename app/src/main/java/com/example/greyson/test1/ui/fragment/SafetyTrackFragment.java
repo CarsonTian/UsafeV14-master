@@ -74,7 +74,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.frag_safetytrack, container, false);
-
         mHandler = new Handler();                                                                        // The timer of sending message
         durTitle = (TextView) view.findViewById(R.id.durTitle);
         upWeb = (WebView) view.findViewById(R.id.upWeb);
@@ -120,6 +119,9 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                 warningDialog();
             }
         };
+
+        tipShow = true;
+
         return view;
     }
 
@@ -128,7 +130,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
      */
     @Override
     protected void initData() {
-        tipShow = true;
         getCurrentLocation();               // Get current location                   
         if (checkDeviceIDPermission()) {    // Check permission of getting state of phone
             getMobileIMEI();                // Get IMEI and number of phone                      
@@ -210,6 +211,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+
     private void checkMediaPlayerPermission() {
         mp = new MediaPlayer();
             try {
@@ -256,7 +258,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         if (edtTimerValue.getText().toString().trim().equals("")) {
             new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice")
-                    .setContentText("Please Enter a Time")
+                    .setContentText("Please set time")
                     .setConfirmText("OK")
                     .show();
             return false;
@@ -304,9 +306,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    mp.stop();
-                    mHandler.removeCallbacks(wTimer);
-                    finishUpload();
+                    buttonStopTime.callOnClick();
                     sweetAlertDialog.dismiss();
                 }
             });
@@ -330,9 +330,17 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void warningDialog() {
+        String name;
+        if (preferences.getString("contact2", "").equals(";")) {
+            name = preferences.getString("contact1", "").trim().split(";")[1];
+        } else if (preferences.getString("contact3", "").equals(";")) {
+            name = preferences.getString("contact1", "").trim().split(";")[1] + ", " + preferences.getString("contact2", "").trim().split(";")[1];
+        } else {
+            name = preferences.getString("contact1", "").trim().split(";")[1] + ", " + preferences.getString("contact2", "").trim().split(";")[1] + ", " + preferences.getString("contact3", "").trim().split(";")[1];
+        }
         SweetAlertDialog sweetAlertDialog1 = new SweetAlertDialog(mContext,SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Alarm")
-                .setContentText("We have sent warning messages, please contact " + preferences.getString("contact1", "").trim().split(";")[1] + ", " + preferences.getString("contact2", "").trim().split(";")[1] + ", " + preferences.getString("contact3", "").trim().split(";")[1])
+                .setContentText("We have sent warning messages, please contact " + name)
                 .setConfirmText("Yes")
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
@@ -365,7 +373,13 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
     private void startUpload() {
         timeStamp();
-        upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+        if (preferences.getString("contact2", "").equals(";")) {
+            upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=&c3=&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+        } else if (preferences.getString("contact3", "").equals(";")) {
+            upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences.getString("contact2", "").trim().split(";")[1] + "&c3=&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+        } else {
+            upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+        }
     }
 
     private void finishUpload() {
@@ -377,10 +391,12 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         switch (parent.getSelectedItemPosition()) {
             case 0:
                 durTitle.setText(R.string.one_trip);
+                edtTimerValue.setHint("(5-60)min");
                 modeState = true;
                 break;
             case 1:
                 durTitle.setText(R.string.period);
+                edtTimerValue.setHint("(5-30)min");
                 modeState = false;
                 break;
         }
@@ -394,6 +410,15 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onStart() {
         super.onStart();
+       preferences = mContext.getSharedPreferences("dialog", MODE_PRIVATE);
+        String dialogShow = preferences.getString("trackerDialog",null);
+        if (dialogShow != null && dialogShow.equals("0")) {
+        } else {
+            showInstruction();
+        }
+    }
+
+    private void showInstruction(){
         new SweetAlertDialog(mContext, SweetAlertDialog.NORMAL_TYPE)
                 .setTitleText("Tips")
                 .setContentText("Two Mode.")
@@ -403,7 +428,9 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
-                        tipShow = false;
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("trackerDialog","0");
+                        editor.commit();
                     }
                 })
                 .setConfirmText("Continue")
@@ -414,5 +441,18 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     }
                 })
                 .show();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle){
+        bundle.putBoolean("s", tipShow);
+        super.onSaveInstanceState(bundle);
+    }
+    @Override
+    public void onActivityCreated(Bundle bundle){
+        super.onActivityCreated(bundle);
+        if(bundle != null){
+            tipShow = bundle.getBoolean("s");
+        }
     }
 }

@@ -11,11 +11,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.net.Uri;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
@@ -36,11 +34,6 @@ import com.example.greyson.test1.ui.activity.MainActivity;
 import com.example.greyson.test1.ui.activity.UserSettingActivity;
 import com.example.greyson.test1.ui.base.BaseFragment;
 import com.example.greyson.test1.widget.CountDownView;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -48,7 +41,6 @@ import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -321,9 +313,11 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
                 //mLLSettingButton.setSelected(false);
                 //mLLCancelButton.setSelected(false);
                 if (checkSMSPermission()) {
-
                     startTimer();
-                    if (tipShow) {
+                    preferences = mContext.getSharedPreferences("dialog", MODE_PRIVATE);
+                    String dialogShow = preferences.getString("buttonDialog",null);
+                    if (dialogShow != null && dialogShow.equals("0")) {
+                    } else {
                         showInstructionDialog();
                     }
                 }
@@ -363,6 +357,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
     }
 
     private void showInstructionDialog() {
+        preferences = mContext.getSharedPreferences("dialog", MODE_PRIVATE);
         cdv.stop();
         new SweetAlertDialog(mContext, SweetAlertDialog.NORMAL_TYPE)
                 .setTitleText("Tips")
@@ -374,6 +369,9 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
                         tipShow = false;
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("buttonDialog","0");
+                        editor.commit();
                         if (mTVStartButton.isSelected()) {
                             cdv.start();
                         }
@@ -625,9 +623,6 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
 
     @Override
     public void onResume() {
-        if (tipShow) {
-            //showInstructionDialog();
-        }
         super.onResume();
         Bundle b = getArguments();
         if (b != null) {

@@ -209,7 +209,7 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
 
     private void sendConfirmMessage() {
         if (!checkEmergencyContactEmpty()) {
-            String eMessage = "You are receiving this message from U-Safe as I have added you as one of my emergency contacts. Call me first if u receive any message.";
+            String eMessage = "You are receiving this message from SecureTrip as I have added you as one of my emergency contacts. Call me first if u receive any message.";
             SmsManager smsManager = SmsManager.getDefault();
             List<String> ePhoneList = getPhoneList();
             Iterator<String> iterator = ePhoneList.iterator();

@@ -500,7 +500,6 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         SharedPreferences.Editor editor = preferences1.edit();
         editor.putString("last location", lat + "," + lng);
         editor.commit();
-
     }
 
 
