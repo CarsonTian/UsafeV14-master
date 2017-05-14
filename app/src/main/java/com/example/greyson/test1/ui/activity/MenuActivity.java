@@ -192,6 +192,9 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                 Intent intent1 = new Intent(MenuActivity.this, UserSettingActivity.class);
                 startActivity(intent1);
                 break;
+            case R.id.textlogo:
+                aboutUs();
+                break;
             case R.id.tv_userHelp:
                 Intent intent2 = new Intent(MenuActivity.this, UserGuide.class);
                 startActivity(intent2);
@@ -199,7 +202,13 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    private void aboutUs() {
 
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE);
+        sweetAlertDialog.setTitleText("About Us")
+                .setContentText("We are team HexTech from Monash University. If you are interested in our app, please contact us at hextechsecuretrip@gmail.com")
+                .show();
+    }
 
     @Override
     protected void destroyView() {

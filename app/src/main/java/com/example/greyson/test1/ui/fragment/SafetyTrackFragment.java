@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.os.Bundle;
@@ -42,7 +44,7 @@ import static android.content.Context.MODE_PRIVATE;
  * @author Greyson, Carson
  * @version 1.0
  */
-public class SafetyTrackFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener{
+public class SafetyTrackFragment extends BaseFragment implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     private static final int REQUEST_GET_DEVICEID = 222;
     private String id, tStamp, cusTime, number,cLatitude, cLngtitude;
@@ -57,11 +59,14 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private Handler mHandler;
     private MediaPlayer mp;
     private CountDownView2 cdv;                  // Count down timer service
-    private SharedPreferences preferences;       // Receive data from other fragments
+    private SharedPreferences preferences1;
+    private SharedPreferences preferences2;       // Receive data from other fragments
     private SweetAlertDialog sweetAlertDialog;
     private String saveTime="";                  // The state data of timer
     private boolean modeState = true;
     private boolean tipShow;
+    private LocationManager locationManager;
+    private String provider;
 
     /**
      * This method will be called when this fragment created.
@@ -130,11 +135,11 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
      */
     @Override
     protected void initData() {
-        getCurrentLocation();               // Get current location                   
+        getCurrentLocation();               // Get current location
         if (checkDeviceIDPermission()) {    // Check permission of getting state of phone
             getMobileIMEI();                // Get IMEI and number of phone                      
         }
-        preferences = mContext.getSharedPreferences("UserSetting",MODE_PRIVATE);
+        preferences2 = mContext.getSharedPreferences("UserSetting",MODE_PRIVATE);
     }
 
     @Override
@@ -183,6 +188,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                         cdv.start();
                         time0.setVisibility(View.GONE);
                         time1.setVisibility(View.VISIBLE);
+                        helpDialog();
                     } else {
                         new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Notice")
@@ -210,7 +216,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             time1.setVisibility(View.GONE);
         }
     }
-
 
     private void checkMediaPlayerPermission() {
         mp = new MediaPlayer();
@@ -240,14 +245,62 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void getCurrentLocation() {
-        SharedPreferences preferences1 = mContext.getSharedPreferences("LastLocation", MODE_PRIVATE);
-        String[] array = preferences1.getString("last location", "0,0").split(",");
+        String[] array;
+        SharedPreferences preferences = mContext.getSharedPreferences("LastLocation", MODE_PRIVATE);
+        String lastLocation = preferences.getString("last location", null);
+        if (lastLocation == null || lastLocation.isEmpty()) {
+            array = getCurrentLocationFromGPS().split(",");
+        } else {
+            array = preferences1.getString("last location", "0,0").split(",");
+        }
         cLatitude = array[0];
         cLngtitude = array[1];
     }
 
+    private String getCurrentLocationFromGPS() {
+        android.location.LocationListener locationListener = new android.location.LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+        locationManager = (LocationManager) mContext.getSystemService(mContext.LOCATION_SERVICE);////
+        provider = LocationManager.GPS_PROVIDER;
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return null;
+        }
+        locationManager.requestLocationUpdates(provider, 5000, 1, locationListener);
+        Location location = locationManager.getLastKnownLocation(provider);
+        String lat = String.valueOf(location.getLatitude());
+        String lng = String.valueOf(location.getLongitude());
+        return lat + "," + lng;
+    }
+
+
     private boolean setNamCan() {
-        if (preferences.getString("contact1", "").trim().equals("") ||  preferences.getString("userName", "").trim().equals("")) {
+        if (preferences2.getString("contact1", "").trim().equals("") ||  preferences2.getString("userName", "").trim().equals("")) {
             return false;
         } else {
             return true;
@@ -269,17 +322,34 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     .setConfirmText("OK")
                     .show();
             return false;
-        } else if (Integer.parseInt(edtTimerValue.getText().toString().trim()) > 30) {
-            new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Notice")
-                    .setContentText("Please make sure time is shorter than 30 min")
-                    .setConfirmText("OK")
-                    .show();
-            return false;
+        }
+        if (modeState) {
+            if (Integer.parseInt(edtTimerValue.getText().toString().trim()) > 60) {
+                new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Notice")
+                        .setContentText("Please make sure time is shorter than 30 min")
+                        .setConfirmText("OK")
+                        .show();
+                return false;
+            }
+            else {
+                totalTimeCountInMilliseconds = 60 * Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
+                cusTime = edtTimerValue.getText().toString().trim();
+                return true;
+            }
         } else {
-            totalTimeCountInMilliseconds = 60 * Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
-            cusTime = edtTimerValue.getText().toString().trim();
-            return true;
+            if (Integer.parseInt(edtTimerValue.getText().toString().trim()) > 30) {
+                new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Notice")
+                        .setContentText("Please make sure time is shorter than 30 min")
+                        .setConfirmText("OK")
+                        .show();
+                return false;
+            } else {
+                totalTimeCountInMilliseconds = 60 * Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
+                cusTime = edtTimerValue.getText().toString().trim();
+                return true;
+            }
         }
     }
 
@@ -329,14 +399,21 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         sweetAlertDialog.show();
     }
 
+    private void helpDialog() {
+        SweetAlertDialog sweetAlertDialog1 = new SweetAlertDialog(mContext,SweetAlertDialog.SUCCESS_TYPE)
+                .setTitleText("Alarm")
+                .setContentText("The timer has started. Please remember to confirm safe when the safety reminder shows up. Otherwise, we will send a message to your contact.");
+        sweetAlertDialog1.show();
+    }
+
     private void warningDialog() {
         String name;
-        if (preferences.getString("contact2", "").equals(";")) {
-            name = preferences.getString("contact1", "").trim().split(";")[1];
-        } else if (preferences.getString("contact3", "").equals(";")) {
-            name = preferences.getString("contact1", "").trim().split(";")[1] + ", " + preferences.getString("contact2", "").trim().split(";")[1];
+        if (preferences2.getString("contact2", "").equals(";")) {
+            name = preferences2.getString("contact1", "").trim().split(";")[1];
+        } else if (preferences2.getString("contact3", "").equals(";")) {
+            name = preferences2.getString("contact1", "").trim().split(";")[1] + ", " + preferences2.getString("contact2", "").trim().split(";")[1];
         } else {
-            name = preferences.getString("contact1", "").trim().split(";")[1] + ", " + preferences.getString("contact2", "").trim().split(";")[1] + ", " + preferences.getString("contact3", "").trim().split(";")[1];
+            name = preferences2.getString("contact1", "").trim().split(";")[1] + ", " + preferences2.getString("contact2", "").trim().split(";")[1] + ", " + preferences2.getString("contact3", "").trim().split(";")[1];
         }
         SweetAlertDialog sweetAlertDialog1 = new SweetAlertDialog(mContext,SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Alarm")
@@ -373,12 +450,12 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
     private void startUpload() {
         timeStamp();
-        if (preferences.getString("contact2", "").equals(";")) {
-            upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=&c3=&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
-        } else if (preferences.getString("contact3", "").equals(";")) {
-            upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences.getString("contact2", "").trim().split(";")[1] + "&c3=&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+        if (preferences2.getString("contact2", "").equals(";")) {
+            upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences2.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences2.getString("contact1", "").trim().split(";")[1] + "&c2=&c3=&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+        } else if (preferences2.getString("contact3", "").equals(";")) {
+            upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences2.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences2.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences2.getString("contact2", "").trim().split(";")[1] + "&c3=&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
         } else {
-            upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+            upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences2.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences2.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences2.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences2.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
         }
     }
 
@@ -410,8 +487,8 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onStart() {
         super.onStart();
-       preferences = mContext.getSharedPreferences("dialog", MODE_PRIVATE);
-        String dialogShow = preferences.getString("trackerDialog",null);
+        preferences1 = mContext.getSharedPreferences("dialog", MODE_PRIVATE);
+        String dialogShow = preferences1.getString("trackerDialog",null);
         if (dialogShow != null && dialogShow.equals("0")) {
         } else {
             showInstruction();
@@ -421,14 +498,14 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private void showInstruction(){
         new SweetAlertDialog(mContext, SweetAlertDialog.NORMAL_TYPE)
                 .setTitleText("Tips")
-                .setContentText("Two Mode.")
+                .setContentText("Safety reminder will only show up after the time period.Safety reminder will show up every time period you preset.")
                 .setCancelText("Don't ask me again")
                 .showCancelButton(true)
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
-                        SharedPreferences.Editor editor = preferences.edit();
+                        SharedPreferences.Editor editor = preferences1.edit();
                         editor.putString("trackerDialog","0");
                         editor.commit();
                     }
@@ -455,4 +532,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             tipShow = bundle.getBoolean("s");
         }
     }
+
+
 }
