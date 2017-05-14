@@ -10,8 +10,8 @@
     </string-array>
 
     <string-array name="mode">
-        <item>One Trip</item>
-        <item>Period</item>
+        <item>Journey</item>
+        <item>Explore</item>
     </string-array>
 
     <string name="light_theme">Light Theme</string>

@@ -62,9 +62,9 @@ import static android.content.Context.MODE_PRIVATE;
 
 /**
  * This class is used to achieve the map function.
- *  Users can view the safe places and pin a event on the map
- *  @author Greyson, Carson
- *  @version 1.0
+ * Users can view the safe places and pin a event on the map
+ * @author Greyson, Carson
+ * @version 1.0
  */
 
 public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.ConnectionCallbacks,
