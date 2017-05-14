@@ -269,7 +269,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void showCheckDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Are you sure Call 000 ?")
+                .setTitleText("Call 000 ?")
                 .setCancelText("No")
                 .showCancelButton(true)
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {

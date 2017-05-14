@@ -208,7 +208,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
 
     private void showCheckDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Calling 000 ?")
+                .setTitleText("Call 000 ?")
                 .setCancelText("No")
                 .showCancelButton(true)
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {

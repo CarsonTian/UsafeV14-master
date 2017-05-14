@@ -61,6 +61,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private SweetAlertDialog sweetAlertDialog;
     private String saveTime="";                  // The state data of timer
     private boolean modeState = true;
+    private boolean tipShow;
 
     /**
      * This method will be called when this fragment created.
@@ -127,6 +128,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
      */
     @Override
     protected void initData() {
+        tipShow = true;
         getCurrentLocation();               // Get current location                   
         if (checkDeviceIDPermission()) {    // Check permission of getting state of phone
             getMobileIMEI();                // Get IMEI and number of phone                      
@@ -387,5 +389,30 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        new SweetAlertDialog(mContext, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText("Tips")
+                .setContentText("Two Mode.")
+                .setCancelText("Don't ask me again")
+                .showCancelButton(true)
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        tipShow = false;
+                    }
+                })
+                .setConfirmText("Continue")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
     }
 }
