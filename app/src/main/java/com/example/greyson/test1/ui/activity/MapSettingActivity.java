@@ -1,6 +1,7 @@
 package com.example.greyson.test1.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
@@ -95,7 +96,6 @@ public class MapSettingActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         toColor = parent.getSelectedItem().toString();
-        //Toast.makeText(this, parent.getSelectedItem().toString(),Toast.LENGTH_SHORT).show();
     }
 
     @Override

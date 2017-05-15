@@ -474,6 +474,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onStart() {
         super.onStart();
+
         preferences1 = mContext.getSharedPreferences("dialog", MODE_PRIVATE);
         String dialogShow = preferences1.getString("trackerDialog",null);
         if (dialogShow != null && dialogShow.equals("0")) {
@@ -492,6 +493,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
+
                         SharedPreferences.Editor editor = preferences1.edit();
                         editor.putString("trackerDialog","0");
                         editor.commit();
@@ -506,19 +508,4 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                 })
                 .show();
     }
-
-    @Override
-    public void onSaveInstanceState(Bundle bundle){
-        bundle.putBoolean("s", tipShow);
-        super.onSaveInstanceState(bundle);
-    }
-    @Override
-    public void onActivityCreated(Bundle bundle){
-        super.onActivityCreated(bundle);
-        if(bundle != null){
-            tipShow = bundle.getBoolean("s");
-        }
-    }
-
-
 }
