@@ -124,9 +124,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                 warningDialog();
             }
         };
-
         tipShow = true;
-
         return view;
     }
 
@@ -192,7 +190,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     } else {
                         new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Notice")
-                                .setContentText(String.valueOf(R.string.no_phone_number))
+                                .setContentText(getResources().getString(R.string.no_phone_number))
                                 .show();
                     }
                 }
@@ -251,7 +249,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         if (lastLocation == null || lastLocation.isEmpty()) {
             array = getCurrentLocationFromGPS().split(",");
         } else {
-            array = preferences1.getString("last location", "0,0").split(",");
+            array = preferences.getString("last location", "").split(",");
         }
         cLatitude = array[0];
         cLngtitude = array[1];
@@ -324,19 +322,9 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             return false;
         }
         if (modeState) {
-            if (Integer.parseInt(edtTimerValue.getText().toString().trim()) > 60) {
-                new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Notice")
-                        .setContentText("Please make sure time is shorter than 30 min")
-                        .setConfirmText("OK")
-                        .show();
-                return false;
-            }
-            else {
                 totalTimeCountInMilliseconds = 60 * Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
                 cusTime = edtTimerValue.getText().toString().trim();
                 return true;
-            }
         } else {
             if (Integer.parseInt(edtTimerValue.getText().toString().trim()) > 30) {
                 new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
@@ -468,7 +456,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         switch (parent.getSelectedItemPosition()) {
             case 0:
                 durTitle.setText(R.string.one_trip);
-                edtTimerValue.setHint("(5-60)min");
                 modeState = true;
                 break;
             case 1:

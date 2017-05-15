@@ -27,7 +27,7 @@
     <string name="cp_actionmode_selected">%d selected</string>
     <string name="cp_limit_reached">You can\'t pick more than %d contacts!</string>
     <string name="no_phone_number">Please check your SIM card</string>
-    <string name="one_trip">Remind me after</string>
+    <string name="one_trip">My journey will take</string>
     <string name="period">Remind me every</string>
 
 </resources>

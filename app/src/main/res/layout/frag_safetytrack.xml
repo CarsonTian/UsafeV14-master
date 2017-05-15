@@ -116,7 +116,7 @@
             android:layout_width="131dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="(5-60) min"
+            android:hint="min"
             android:inputType="phone"
             android:textAlignment="center"
             android:textSize="24sp" />
