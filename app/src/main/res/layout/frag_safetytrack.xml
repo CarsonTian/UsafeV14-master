@@ -116,7 +116,7 @@
             android:layout_width="131dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="(5-30) min"
+            android:hint="(5-60) min"
             android:inputType="phone"
             android:textAlignment="center"
             android:textSize="24sp" />
@@ -160,7 +160,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="124dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="10dp">

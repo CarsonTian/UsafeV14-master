@@ -178,7 +178,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.ll_startTrackMenu:
                 intent.putExtra("menu","track");
-                if (checkReadPhoneStatePermission()) {
+                if (checkMapPermission()) {
                     startActivity(intent);
                 }
                 break;
@@ -202,24 +202,22 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    private void aboutUs() {
 
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE);
+        sweetAlertDialog.setTitleText("About Us")
+                .setContentText("We are team HexTech from Monash University. If you are interested in our app, please contact us at hextechsecuretrip@gmail.com")
+                .show();
+    }
 
     @Override
     protected void destroyView() {
 
     }
 
-    private void aboutUs() {
-
-        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE);
-        sweetAlertDialog.setTitleText("About Us")
-                .setContentText("Team Name: HexTech?")
-                .show();
-    }
-
     private void showCheckDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Calling 000 ?")
+                .setTitleText("Call 000 ?")
                 .setCancelText("No")
                 .showCancelButton(true)
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
