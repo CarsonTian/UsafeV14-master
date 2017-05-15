@@ -252,11 +252,21 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
                 String phone = iterator.next();
                 smsManager.sendTextMessage(phone, null, eMessage, sentPendingIntent, deliveredPendingIntent);
             }
-            new SweetAlertDialog(mContext, SweetAlertDialog.SUCCESS_TYPE)
-                    .setTitleText("Message Sent Successfully.")
-                    .setContentText(eMessage)
-                    .show();
+            if (!checkDestroy()) {///////////////////////////////////////////
+                new SweetAlertDialog(mContext, SweetAlertDialog.SUCCESS_TYPE)
+                        .setTitleText("Message Sent Successfully.")
+                        .setContentText(eMessage)
+                        .show();
+            }
         }
+    }
+
+    private boolean checkDestroy() {
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences("destroy", MODE_PRIVATE);
+        String destroy = sharedPreferences.getString("isDestroy", null);
+        if (destroy == null || destroy.isEmpty()) {return false;}
+        else if (destroy.equals("0")) {return false;}
+        return true;
     }
 
     private List<String> getPhoneList() {
@@ -315,6 +325,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
                 if (checkSMSPermission()) {
                     startTimer();
                     preferences = mContext.getSharedPreferences("dialog", MODE_PRIVATE);
+
                     String dialogShow = preferences.getString("buttonDialog",null);
                     if (dialogShow != null && dialogShow.equals("0")) {
                     } else {
@@ -370,6 +381,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
                         sDialog.dismissWithAnimation();
                         tipShow = false;
                         SharedPreferences.Editor editor = preferences.edit();
+
                         editor.putString("buttonDialog","0");
                         editor.commit();
                         if (mTVStartButton.isSelected()) {
@@ -395,8 +407,6 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
      * This is to set notification button
      */
     private void startNotification() {
-        //if(checkNotificaionExsist())
-            //return;
         String i1 = Long.toString(System.currentTimeMillis()) + "qwe";
         String i2 = Long.toString(System.currentTimeMillis()) + "asd";
         String i3 = Long.toString(System.currentTimeMillis()) + "zxc";
