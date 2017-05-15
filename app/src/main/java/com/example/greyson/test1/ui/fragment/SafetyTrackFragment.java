@@ -386,4 +386,39 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        preferences = mContext.getSharedPreferences("dialog", MODE_PRIVATE);
+        String dialogShow = preferences.getString("trackerDialog", null);
+        if (dialogShow != null && dialogShow.equals("0")) {}
+        else {showInstructionDialog();}
+    }
+
+    private void showInstructionDialog() {
+        new SweetAlertDialog(mContext, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText("Tips")
+                .setContentText("Two Mode")
+                .setCancelText("Two ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo ModeTwo Mode")
+                .showCancelButton(true)
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putString("trackerDialog", "0");
+                        editor.commit();
+
+                    }
+                })
+                .setConfirmText("Continue")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
+    }
 }

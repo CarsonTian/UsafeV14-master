@@ -92,14 +92,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mFragments.add(mSafetyButtonFragment);
 
         checkMenuIntent();
-        //mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyMapFragment, "0").commitAllowingStateLoss();
-        //mCurrentIndex = 0;
-        //mLLSafetyMap.setSelected(true);
-
         IntentFilter filter = new IntentFilter(Constants.INTENT_ACTION_SELECT_FRAG_BUTTON);
         filter.addAction(Constants.INTENT_ACTION_USER_LOGIN);
         filter.addAction(Constants.INTENT_ACTION_USER_LOGOUT);
         registerReceiver(mReceiver, filter);
+
+        SharedPreferences sharedPreferences = this.getSharedPreferences("destroy", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("isDestroy", "0");
+        editor.commit();
     }
 
     private void checkMenuIntent () {
@@ -216,6 +217,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void destroyView() {
         unregisterReceiver(mReceiver);
+        SharedPreferences sharedPreferences = this.getSharedPreferences("destroy", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("isDestroy", "1");
+        editor.commit();
     }
 
     @Override
