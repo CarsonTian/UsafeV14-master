@@ -95,12 +95,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         IntentFilter filter = new IntentFilter(Constants.INTENT_ACTION_SELECT_FRAG_BUTTON);
         filter.addAction(Constants.INTENT_ACTION_USER_LOGIN);
         filter.addAction(Constants.INTENT_ACTION_USER_LOGOUT);
-        registerReceiver(mReceiver, filter);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("destroy", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("isDestroy", "0");
         editor.commit();
+
+        Intent intent = getIntent();
+        String extra = intent.getAction();
+        if (extra == null) {
+            onClick(mLLSafetyButton);
+        } else if (extra.equals("qwe")) {
+            setSafetyMapNotificationArg(1);
+        } else if (extra.equals("qwe")) {
+            setSafetyMapNotificationArg(1);
+        }
     }
 
     private void checkMenuIntent () {
@@ -131,80 +140,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-            switch (intent.getAction()) {
-                case Constants.INTENT_ACTION_USER_LOGIN:
-                    WSAppContext.getInstance();
-                    mFragments.remove(2);
-                    mFragments.add(2, mSafetyTrackFragment);
-                    if (mSafetyTrackFragment.isAdded()) {
-                        fragmentTransaction.show(mSafetyTrackFragment);
-                    } else {
-                        mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyTrackFragment, "2")
-                                .commitAllowingStateLoss();
-                        fragmentTransaction.show(mSafetyTrackFragment);
-                    }
-                    mCurrentIndex = 2;
-                    mLLSafetyTrack.setSelected(true);
 
-                    fragmentTransaction.hide(mSafetyMoreFragment);
-
-                    fragmentTransaction.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                    fragmentTransaction.commitAllowingStateLoss();
-
-                    break;
-                case Constants.INTENT_ACTION_USER_LOGOUT:
-                    WSAppContext.getInstance();
-                    mFragments.remove(2);
-                    mFragments.add(2, mSafetyTrackFragment);
-                    //选中loginFragment
-                    if (mSafetyTrackFragment.isAdded()) {
-                        fragmentTransaction.show(mSafetyTrackFragment);
-                    } else {
-                        mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyTrackFragment, "2")
-                                .commitAllowingStateLoss();
-                        fragmentTransaction.show(mSafetyTrackFragment);
-                    }
-                    mCurrentIndex = 2;
-                    mLLSafetyTrack.setSelected(true);
-
-                    fragmentTransaction.hide(mSafetyTrackFragment);
-
-                    fragmentTransaction.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                    fragmentTransaction.commitAllowingStateLoss();
-
-                    break;
-                case Constants.INTENT_ACTION_SELECT_FRAG_BUTTON:
-                    if (mSafetyButtonFragment.isAdded()) {
-                        fragmentTransaction.show(mSafetyButtonFragment);
-                    } else {
-                        mFragmentManager.beginTransaction().add(R.id.fl_main, mSafetyButtonFragment, "1")
-                                .commitAllowingStateLoss();
-                        fragmentTransaction.show(mSafetyButtonFragment);
-                    }
-                    mCurrentIndex = 1;
-                    mLLSafetyButton.setSelected(true);
-
-                    if (mSafetyMapFragment.isVisible()) {
-                        fragmentTransaction.hide(mSafetyMapFragment);
-                        mLLSafetyMap.setSelected(false);
-                    } else if (mSafetyTrackFragment.isVisible()) {
-                        fragmentTransaction.hide(mSafetyTrackFragment);
-                        mLLSafetyTrack.setSelected(false);
-                    } else if (mSafetyMoreFragment.isVisible()) {
-                        fragmentTransaction.hide(mSafetyMoreFragment);
-                        mLLSafetyMore.setSelected(false);
-                    }
-
-                    fragmentTransaction.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                    fragmentTransaction.commitAllowingStateLoss();
-                    break;
-            }
-        }
-    };
 
     @Override
     protected void initEvent() {
@@ -216,10 +152,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void destroyView() {
-        unregisterReceiver(mReceiver);
-        SharedPreferences sharedPreferences = this.getSharedPreferences("destroy", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("isDestroy", "1");
+        SharedPreferences preferences = this.getSharedPreferences("actID", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("actID", "0");
         editor.commit();
     }
 
@@ -294,7 +229,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                             checkCallPermission();
                             return;
                         }
-                        startActivity(intent0);
+                        //startActivity(intent0);
                     }
                 })
                 .show();
@@ -354,14 +289,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (extra == null) {
             onClick(mLLSafetyButton);
         } else if (extra.equals("qwe")) {
-            onClick(mLLSafetyButton);
-        } else if (extra.equals("asd")) {
             setSafetyMapNotificationArg(1);
-        } else if (extra.equals("zxc")) {
-            setSafetyMapNotificationArg(2);
         }
-
-
     }
 
     private void tesmt(Intent intent) {
@@ -399,5 +328,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         fragmentTransaction.setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         fragmentTransaction.commitAllowingStateLoss();
         mCurrentIndex = 3;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        destroyView();
     }
 }

@@ -174,7 +174,9 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                 break;
             case R.id.ll_panicButtonMenu:
                 intent.putExtra("menu","button");
+
                 startActivity(intent);
+
                 break;
             case R.id.ll_startTrackMenu:
                 intent.putExtra("menu","track");
@@ -212,7 +214,10 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void destroyView() {
-
+        SharedPreferences preferences = this.getSharedPreferences("timer", MODE_PRIVATE);
+        SharedPreferences.Editor editor1 = preferences.edit();
+        editor1.putString("timer", "reset");
+        editor1.commit();
     }
 
     private void showCheckDialog() {
@@ -232,12 +237,12 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
                         Intent intent0 = new Intent(Intent.ACTION_CALL);
-                        intent0.setData(Uri.parse("tel:0"));
+                        intent0.setData(Uri.parse("tel:000"));
                         if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             checkCallPermission();
                             return;
                         }
-                        startActivity(intent0);
+                        //startActivity(intent0);
                     }
                 })
                 .show();
@@ -307,4 +312,5 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                 break;
         }
     }
+
 }

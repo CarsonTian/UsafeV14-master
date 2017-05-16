@@ -112,6 +112,10 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
                 //checkSMSPermission();
                 if (canSendMSM == true) {
                     sendMessageToContact();
+                    SharedPreferences preferences = mContext.getSharedPreferences("timer", MODE_PRIVATE);
+                    SharedPreferences.Editor editor1 = preferences.edit();
+                    editor1.putString("timer", "reset");
+                    editor1.commit();
                 }
                 canSendMSM = false;
                 ///
@@ -252,7 +256,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
                 String phone = iterator.next();
                 smsManager.sendTextMessage(phone, null, eMessage, sentPendingIntent, deliveredPendingIntent);
             }
-            if (!checkDestroy()) {///////////////////////////////////////////
+            if (checkActivityID()) {
                 new SweetAlertDialog(mContext, SweetAlertDialog.SUCCESS_TYPE)
                         .setTitleText("Message Sent Successfully.")
                         .setContentText(eMessage)
@@ -261,11 +265,11 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         }
     }
 
-    private boolean checkDestroy() {
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences("destroy", MODE_PRIVATE);
-        String destroy = sharedPreferences.getString("isDestroy", null);
-        if (destroy == null || destroy.isEmpty()) {return false;}
-        else if (destroy.equals("0")) {return false;}
+    private boolean checkActivityID() {
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences("actID", MODE_PRIVATE);
+        String actId = sharedPreferences.getString("actID", null);
+        if (actId == null || actId.isEmpty()) {return true;}
+        else if (actId.equals("0")) {return false;}
         return true;
     }
 
@@ -299,7 +303,6 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         } else {
             loadEmergencyContact();
         }
-
         //mTVContactName.setText("Contact Name:" + lastContact.split(",")[0]);
         //mTVContactNumber.setText("Contact Number:" + lastContact.split(",")[1]);
     }
@@ -344,10 +347,23 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         }
     }
 
+    private void saveActivityId(String s) {
+        //String actId = String.valueOf(this.getActivity().hashCode());
+        preferences = mContext.getSharedPreferences("actID", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("actID", s);
+        editor.commit();
+
+    }
+
     /**
      * reset time
      */
     private void resetTimer() {
+        preferences = mContext.getSharedPreferences("timer", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("timer", "reset");
+        editor.commit();
         cdv.reset();
         canSendMSM = true;
     }
@@ -357,6 +373,11 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
             if (!mTVStartButton.isSelected()) {
                 mTVStartButton.setBackgroundResource(R.drawable.buttonreset);
                 mTVStartButton.setSelected(true);
+                saveActivityId("1");
+                preferences = mContext.getSharedPreferences("timer", MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("timer", "run");
+                editor.commit();
                 cdv.start();
                 startNotification();
             } else if (mTVStartButton.isSelected()) {
@@ -408,14 +429,10 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
      */
     private void startNotification() {
         String i1 = Long.toString(System.currentTimeMillis()) + "qwe";
-        String i2 = Long.toString(System.currentTimeMillis()) + "asd";
-        String i3 = Long.toString(System.currentTimeMillis()) + "zxc";
 
         SharedPreferences preferences = mContext.getSharedPreferences("notification", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("i1", i1);
-        editor.putString("i2", i2);
-        editor.putString("i3", i3);
         editor.commit();
 
         Intent intent = new Intent(mContext, MainActivity.class);
@@ -423,23 +440,9 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
         intent.setAction("qwe");
         PendingIntent pIntent = PendingIntent.getActivity(mContext, (int) System.currentTimeMillis(), intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Intent intent1 = new Intent(mContext, MainActivity.class);
-        intent1.putExtra("notification",i2);
-        intent1.setAction("asd");
-        PendingIntent pIntent1 = PendingIntent.getActivity(mContext, (int) System.currentTimeMillis(), intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Intent intent2 = new Intent(mContext, MainActivity.class);
-        intent2.putExtra("notification",i3);
-        intent2.setAction("zxc");
-        PendingIntent pIntent2 = PendingIntent.getActivity(mContext, (int) System.currentTimeMillis(), intent2, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Action action1 = new NotificationCompat.Action.Builder(R.drawable.ic_alarm_on_black_24dp,"Start Timer",pIntent1).build();
-
-        NotificationCompat.Action action2 = new NotificationCompat.Action.Builder(R.drawable.ic_alarm_off_black_24dp,"Reset Timer",pIntent2).build();
-
         Notification n  = new NotificationCompat.Builder(mContext)
-                .setContentTitle("Secure-Trip")
-                .setContentText("Click to enter application")
+                .setContentTitle("SecureTrip")
+                .setContentText("I feel unsafe, activate panic button!")
                 .setSmallIcon(R.drawable.ic_security_black_24dp)
                 .setContentIntent(pIntent)
                 .setAutoCancel(true)
@@ -448,8 +451,6 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
                 .setTicker("Timer Start")
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(false)
-                .addAction(action1)
-                .addAction(action2)
                 .build();
         NotificationManager notificationManager =
                 (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
@@ -628,7 +629,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
 
     @Override
     protected void destroyView() {
-
+        saveActivityId("0");
     }
 
     @Override
@@ -641,12 +642,28 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
                 case 1:
                     startTimer();
                     getArguments().clear();
-                    break;
+                    return;
                 case 2:
                     resetTimer();
                     getArguments().clear();
-                    break;
+                    return;
             }
         }
+
+        if (checkTimerRun()) {
+            startTimer();
+        }
+    }
+
+    private boolean checkTimerRun() {
+        preferences = mContext.getSharedPreferences("timer",MODE_PRIVATE);
+        String timerRunning = preferences.getString("timer",null);
+        if (timerRunning != null) {
+            if (timerRunning.equals("run")) {
+                mTVStartButton.setSelected(false);////////
+                return true;
+            }
+        }
+        return false;
     }
 }
