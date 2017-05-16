@@ -1,8 +1,6 @@
 package com.example.greyson.test1.ui.activity;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -21,7 +19,6 @@ import android.widget.LinearLayout;
 
 import com.example.greyson.test1.R;
 import com.example.greyson.test1.config.Constants;
-import com.example.greyson.test1.config.WSAppContext;
 import com.example.greyson.test1.ui.base.BaseActivity;
 import com.example.greyson.test1.ui.base.BaseFragment;
 import com.example.greyson.test1.ui.fragment.SafetyButtonFragment;

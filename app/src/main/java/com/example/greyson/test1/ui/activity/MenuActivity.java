@@ -180,7 +180,6 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
             case R.id.ll_panicButtonMenu:
                 intent.putExtra("menu","button");
                 startActivity(intent);
-
                 break;
             case R.id.ll_startTrackMenu:
                 intent.putExtra("menu","track");
@@ -209,10 +208,9 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void aboutUs() {
-
         SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(this, SweetAlertDialog.NORMAL_TYPE);
         sweetAlertDialog.setTitleText("About Us")
-                .setContentText("We are team HexTech from Monash University. If you are interested in our app, please contact us at hextechsecuretrip@gmail.com")
+                .setContentText(getResources().getString(R.string.about_us))
                 .show();
     }
 
@@ -241,7 +239,7 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
                         Intent intent0 = new Intent(Intent.ACTION_CALL);
-                        intent0.setData(Uri.parse("tel:000"));
+                        intent0.setData(Uri.parse("tel:0"));
                         if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             checkCallPermission();
                             return;

@@ -124,7 +124,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.6"
                 android:gravity="center"
+
                 android:text="Emergency Contact : "
+
+
                 android:textSize="40px" />
 
             <TextView
@@ -184,6 +187,7 @@
                 android:layout_weight="1.6"
                 android:gravity="center"
                 android:text="Emergency Contact : "
+
                 android:textSize="40px" />
 
             <TextView

@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:layout_weight="0.46">
+                android:layout_weight="0.33">
 
                 <TextView
                     android:id="@+id/textView10"
@@ -116,7 +116,7 @@
             android:layout_width="131dp"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="(5-60) min"
+            android:hint="min"
             android:inputType="phone"
             android:textAlignment="center"
             android:textSize="24sp" />
