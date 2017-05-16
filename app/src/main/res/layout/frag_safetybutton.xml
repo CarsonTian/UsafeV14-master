@@ -55,7 +55,7 @@
                 android:layout_height="35dp"
                 android:background="@color/textbg"
                 android:gravity="center"
-                android:text=" Contact(1): "
+                android:text=" Emergency Contact : "
                 android:textSize="35px" />
         </LinearLayout>
 
@@ -100,7 +100,7 @@
                 android:layout_height="35dp"
                 android:background="@color/textbg"
                 android:gravity="center"
-                android:text=" Contact(2): "
+                android:text=" Emergency Contact : "
                 android:textSize="35px" />
         </LinearLayout>
 
@@ -145,7 +145,7 @@
                 android:layout_height="35dp"
                 android:background="@color/textbg"
                 android:gravity="center"
-                android:text=" Contact(3): "
+                android:text=" Emergency Contact : "
                 android:textSize="35px" />
         </LinearLayout>
 
@@ -186,6 +186,14 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:text=" Tips: You can also Activate Panic Button in the Notification Bar. "
+        android:textSize="16dp"/>
 
     <LinearLayout
         android:id="@+id/ll_sb_startReset"

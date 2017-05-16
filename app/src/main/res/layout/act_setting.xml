@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.6"
                 android:gravity="center"
-                android:text="Emergency Contact 1: "
+                android:text="Emergency Contact : "
                 android:textSize="40px" />
 
             <TextView
@@ -124,7 +124,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.6"
                 android:gravity="center"
-                android:text="Emergency Contact 2: "
+
+                android:text="Emergency Contact : "
+
+
                 android:textSize="40px" />
 
             <TextView
@@ -183,7 +186,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.6"
                 android:gravity="center"
-                android:text="Emergency Contact 3: "
+                android:text="Emergency Contact : "
+
                 android:textSize="40px" />
 
             <TextView

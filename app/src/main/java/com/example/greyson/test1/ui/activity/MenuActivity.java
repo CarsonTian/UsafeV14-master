@@ -71,6 +71,11 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         else {requestAllPermission();}
         checkEmergencyContact();
 
+        if (checkTimerRun()) {
+            Intent intent = new Intent(MenuActivity.this, MainActivity.class);
+            intent.putExtra("menu","button");
+            startActivity(intent);
+        }
         //checkCoarseLocationPermission();
         //checkFineLocationPermission();
         //checkSMSPermission();
@@ -310,4 +315,17 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private boolean checkTimerRun() {
+        SharedPreferences preferences = this.getSharedPreferences("timer",MODE_PRIVATE);
+        String timerRunning = preferences.getString("timer",null);
+        if (timerRunning != null) {
+            if (timerRunning.equals("run")) {return true;}
+        }
+        return false;
+    }
 }
