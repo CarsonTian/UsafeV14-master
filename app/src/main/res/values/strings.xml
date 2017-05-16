@@ -29,5 +29,6 @@
     <string name="no_phone_number">Please check your SIM card</string>
     <string name="one_trip">My journey will take</string>
     <string name="period">Remind me every</string>
+    <string name="about_us">We are team HexTech from Monash University. If you are interested in our app, please contact us at hextechsecuretrip@gmail.com</string>
 
 </resources>

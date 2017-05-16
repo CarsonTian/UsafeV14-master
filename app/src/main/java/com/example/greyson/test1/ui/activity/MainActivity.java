@@ -1,8 +1,6 @@
 package com.example.greyson.test1.ui.activity;
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -21,7 +19,6 @@ import android.widget.LinearLayout;
 
 import com.example.greyson.test1.R;
 import com.example.greyson.test1.config.Constants;
-import com.example.greyson.test1.config.WSAppContext;
 import com.example.greyson.test1.ui.base.BaseActivity;
 import com.example.greyson.test1.ui.base.BaseFragment;
 import com.example.greyson.test1.ui.fragment.SafetyButtonFragment;
@@ -103,11 +100,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         Intent intent = getIntent();
         String extra = intent.getAction();
-        if (extra == null) {
-            onClick(mLLSafetyButton);
-        } else if (extra.equals("qwe")) {
-            setSafetyMapNotificationArg(1);
-        } else if (extra.equals("qwe")) {
+        if (extra != null && extra.equals("qwe")) {
             setSafetyMapNotificationArg(1);
         }
     }
