@@ -103,11 +103,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         Intent intent = getIntent();
         String extra = intent.getAction();
-        if (extra == null) {
-            onClick(mLLSafetyButton);
-        } else if (extra.equals("qwe")) {
-            setSafetyMapNotificationArg(1);
-        } else if (extra.equals("qwe")) {
+        if (extra != null && extra.equals("qwe")) {
             setSafetyMapNotificationArg(1);
         }
     }
@@ -261,7 +257,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private boolean checkReadPhoneStatePermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_PHONE_STATE}, REQUEST_FINE_LOCATION);
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_FINE_LOCATION);
             return false;
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
@@ -284,7 +280,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        //Bundle b = intent.getA;
         String extra = intent.getAction();
         if (extra == null) {
             onClick(mLLSafetyButton);
