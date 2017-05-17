@@ -1,6 +1,28 @@
 <resources>
     <string name="app_name">SecureTrip</string>
     <string name="google_maps_api_key">AIzaSyB6yMoK98piZ4RRQ0n3o6nJvLTNZBGWOvQ</string>
+    <string name="light_theme">Light Theme</string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="cp_contact_tab_title">Contacts</string>
+    <string name="cp_group_tab_title">Groups</string>
+    <string name="cp_no_contacts">No Contacts</string>
+    <string name="cp_no_groups">No Groups</string>
+    <string name="cp_actionmode_selected">%d selected</string>
+    <string name="cp_limit_reached">You can\'t pick more than %d contacts!</string>
+    <string name="no_phone_number">Please check your SIM card</string>
+    <string name="one_trip">My journey will take</string>
+    <string name="period">Remind me every</string>
+    <string name="about_us">We are team HexTech from Monash University. If you are interested in our app, please contact us at hextechsecuretrip@gmail.com</string>
+    <string name="tracker_successful_tips">The timer has started. We will record your geolocation and send it to your emergence contact if you are not safe</string>
+    <string name="tracker_send_message">We have sent warning messages, please contact </string>
+    <string name="eMessage">You are receiving this message from SecureTrip as I have added you as one of my emergency contacts. Call me first if u receive any message.</string>
+    <string name="contact_lack_error">At least one emergency contact is required.</string>
+    <string name="contact_too_much_error">Sorry, You cannot pick more than 3 contacts.</string>
+    <string name="permission_successful">All permissions granted successfully.</string>
+    <string name="permission_failed">Some functions rely on these permissions.</string>
+    <string name="call_000">111</string>
+    <string name="call_000_dialog">Call 000?</string>
+
     <string-array name="changepin_array">
         <item>Assault (Red)</item>
         <item>Discrimination (Purple)</item>
@@ -14,21 +36,8 @@
         <item>Explore</item>
     </string-array>
 
-    <string name="light_theme">Light Theme</string>
-    <string name="dark_theme">Dark Theme</string>
-    <string name="cp_contact_tab_title">Contacts</string>
-    <string name="cp_group_tab_title">Groups</string>
-    <string name="cp_no_contacts">No Contacts</string>
-    <string name="cp_no_groups">No Groups</string>
     <plurals name="cp_group_description">
         <item quantity="one">(%1$d contact)</item>
         <item quantity="other">(%1$d contacts)</item>
     </plurals>
-    <string name="cp_actionmode_selected">%d selected</string>
-    <string name="cp_limit_reached">You can\'t pick more than %d contacts!</string>
-    <string name="no_phone_number">Please check your SIM card</string>
-    <string name="one_trip">My journey will take</string>
-    <string name="period">Remind me every</string>
-    <string name="about_us">We are team HexTech from Monash University. If you are interested in our app, please contact us at hextechsecuretrip@gmail.com</string>
-
 </resources>

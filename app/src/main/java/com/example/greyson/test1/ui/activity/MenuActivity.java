@@ -300,14 +300,14 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                             && ReadPhoneStatePermission && SendSMSPermission && CallPhonePermission) {
                         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                                 .setTitleText("Good")
-                                .setContentText("All Permissions Granted Successfully.")
+                                .setContentText(getResources().getString(R.string.permission_successful))
                                 .show();
 
                     }
                     else {
                         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Notice")
-                                .setContentText("Some Functions Rely These Permissions.")
+                                .setContentText(getResources().getString(R.string.permission_failed))
                                 .show();
                     }
                 }
