@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -175,50 +176,6 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
      * This is method for sending message
      */
     private void sendMessageToContact() {
-        String SMS_SENT = "SMS_SENT";
-        String SMS_DELIVERED = "SMS_DELIVERED";
-        PendingIntent sentPendingIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(SMS_SENT), 0);
-        PendingIntent deliveredPendingIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(SMS_DELIVERED), 0);
-
-
-        BroadcastReceiver smsSent = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        //Toast.makeText(context, "SMS sent successfully", Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(context, "Generic failure cause", Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        //Toast.makeText(context, "Service is currently unavailable", Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_NULL_PDU:
-                        Toast.makeText(context, "No pdu provided", Toast.LENGTH_SHORT).show();
-                        break;
-                    case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(context, "Radio was explicitly turned off", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        };
-        mContext.registerReceiver(smsSent, new IntentFilter(SMS_SENT));
-
-        BroadcastReceiver smsDelivered = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                switch (getResultCode()) {
-                    case Activity.RESULT_OK:
-                        break;
-                    case Activity.RESULT_CANCELED:
-                        Toast.makeText(context, "SMS not delivered", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        };
-        mContext.registerReceiver(smsDelivered, new IntentFilter(SMS_DELIVERED));
-
         if (!checkEmergencyContactEmpty()) {
             SharedPreferences preferences = mContext.getSharedPreferences("LastLocation", MODE_PRIVATE);
             String lastLocation = preferences.getString("last location", null);
@@ -229,12 +186,11 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
             String eMessage = "This is an emergency message, please call me first, press this link to see my last location: "
                     + baseMapUrl + lastLocation;
             SmsManager smsManager = SmsManager.getDefault();
-
             List<String> ePhoneList = getPhoneList();
             Iterator<String> iterator = ePhoneList.iterator();
             while (iterator.hasNext()) {
                 String phone = iterator.next();
-                smsManager.sendTextMessage(phone, null, eMessage, sentPendingIntent, deliveredPendingIntent);
+                smsManager.sendTextMessage(phone, null, eMessage, null, null);
             }
             if (checkActivityID()) {
                 new SweetAlertDialog(mContext, SweetAlertDialog.SUCCESS_TYPE)
@@ -350,6 +306,7 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
                 editor.putString("timer", "run");
                 editor.commit();
                 cdv.start();
+                startNotification();
             } else if (mTVStartButton.isSelected()) {
                 mTVStartButton.setBackgroundResource(R.drawable.buttonactivate);
                 mTVStartButton.setSelected(false);
@@ -501,14 +458,17 @@ public class SafetyButtonFragment extends BaseFragment implements View.OnClickLi
             return true;
         } else if (contact1 != null) {
             if (!contact1.replace(";", " ").trim().isEmpty()) {
+                canSendMSM = true;
                 return false;
             }
         } else if (contact2 != null) {
             if (!contact2.replace(";", " ").trim().isEmpty()) {
+                canSendMSM = true;
                 return false;
             }
         } else if (contact3 != null) {
             if (!contact3.replace(";", " ").trim().isEmpty()) {
+                canSendMSM = true;
                 return false;
             }
         } else {
