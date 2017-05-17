@@ -88,8 +88,8 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
         if (checkEmergencyContactEmpty()) {
             new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Notice!")
-                    .setContentText("Add Emergency Contacts Make Yourself More Safe.")
-                    .setConfirmText("Go to User Setting.")
+                    .setContentText(getResources().getString(R.string.initail_tips))
+                    .setConfirmText(getResources().getString(R.string.initail_tips_button))
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
@@ -310,14 +310,14 @@ public class MenuActivity extends BaseActivity implements View.OnClickListener {
                             && ReadPhoneStatePermission && SendSMSPermission && CallPhonePermission) {
                         new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                                 .setTitleText("Good")
-                                .setContentText("All Permissions Granted Successfully.")
+                                .setContentText(getResources().getString(R.string.permission_successful))
                                 .show();
 
                     }
                     else {
                         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Notice")
-                                .setContentText("Functions rely on these Permissions!")
+                                .setContentText(getResources().getString(R.string.permission_failed))
                                 .show();
                     }
                 }

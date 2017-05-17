@@ -209,7 +209,7 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
 
     private void sendConfirmMessage() {
         if (!checkEmergencyContactEmpty()) {
-            String eMessage = "You are receiving this message from SecureTrip as I have added you as one of my emergency contacts. Call me first if u receive any message.";
+            String eMessage = getResources().getString(R.string.eMessage);
             SmsManager smsManager = SmsManager.getDefault();
             List<String> ePhoneList = getPhoneList();
             Iterator<String> iterator = ePhoneList.iterator();
@@ -224,7 +224,7 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
         } else {
             new SweetAlertDialog(this,SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Error!")
-                    .setContentText("You need choose at least one emergency contact.")
+                    .setContentText(getResources().getString(R.string.contact_lack_error))
                     .show();
         }
     }
@@ -237,7 +237,7 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
         if (contact1 == null && contact2 == null && contact3 == null) {
             new SweetAlertDialog(this,SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Error!")
-                    .setContentText("You need choose at least one emergency contact.")
+                    .setContentText(getResources().getString(R.string.contact_lack_error))
                     .show();
             return true;
         } else if (contact1 != null) {
@@ -255,7 +255,7 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
         } else {
             new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Error!")
-                    .setContentText("You need choose at least one emergency contact.")
+                    .setContentText(getResources().getString(R.string.contact_lack_error))
                     .show();
             return true;
         }
@@ -289,7 +289,7 @@ public class UserSettingActivity extends BaseActivity implements View.OnClickLis
                 .putExtra(ContactPickerActivity.EXTRA_CONTACT_DESCRIPTION_TYPE, ContactsContract.CommonDataKinds.Email.TYPE_WORK)
                 .putExtra(ContactPickerActivity.EXTRA_CONTACT_SORT_ORDER, ContactSortOrder.AUTOMATIC.name())
                 .putExtra(ContactPickerActivity.EXTRA_SELECT_CONTACTS_LIMIT,3)
-                .putExtra(ContactPickerActivity.EXTRA_LIMIT_REACHED_MESSAGE,"Sorry, You Can't Pick More Than 3 Contacts.");
+                .putExtra(ContactPickerActivity.EXTRA_LIMIT_REACHED_MESSAGE,getResources().getString(R.string.contact_too_much_error));
         startActivityForResult(intent, REQUEST_CONTACT);
     }
 

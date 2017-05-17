@@ -202,7 +202,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void showCheckDialog() {
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                .setTitleText("Call 000 ?")
+                .setTitleText(getResources().getString(R.string.call_000_dialog))
                 .setCancelText("No")
                 .showCancelButton(true)
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -217,7 +217,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
                         Intent intent0 = new Intent(Intent.ACTION_CALL);
-                        intent0.setData(Uri.parse("tel:000"));
+                        intent0.setData(Uri.parse(getResources().getString(R.string.call_000)));
                         if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             checkCallPermission();
                             return;

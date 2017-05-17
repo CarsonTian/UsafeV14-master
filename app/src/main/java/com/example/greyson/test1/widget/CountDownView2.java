@@ -65,35 +65,25 @@ public class CountDownView2 extends RelativeLayout {
         LayoutInflater.from(context).inflate(R.layout.countdownview_main, this, true);
 
         TypedArray values = context.obtainStyledAttributes(attrs, R.styleable.CountDownView);
-        int numColorId = values.getResourceId(R.styleable.CountDownView_numberColor, android.R.attr.textColor);
-        int unitColorId = values.getResourceId(R.styleable.CountDownView_unitColor, android.R.attr.textColor);
 
         if(values.getBoolean(R.styleable.CountDownView_showHour, false)) {
             View v = ((ViewStub) findViewById(R.id.hours_stub)).inflate();
             mHours = (TextView) v.findViewById(R.id.hours);
-            //((TextView) v.findViewById(R.id.hours_unit)).setTextColor(getResources().getColorStateList(unitColorId));
-            //mHours.setTextColor(getResources().getColorStateList(numColorId);
         }
 
         if(values.getBoolean(R.styleable.CountDownView_showMin, true)) {
             View v = ((ViewStub) findViewById(R.id.minutes_stub)).inflate();
             mMinutes = (TextView) v.findViewById(R.id.minutes);
-            //((TextView) v.findViewById(R.id.minutes_unit)).setTextColor(getResources().getColorStateList(unitColorId));
-            //mMinutes.setTextColor(getResources().getColorStateList(numColorId));
         }
 
         if(values.getBoolean(R.styleable.CountDownView_showSec, true)) {
             View v = ((ViewStub) findViewById(R.id.seconds_stub)).inflate();
             mSeconds = (TextView) v.findViewById(R.id.seconds);
-            //((TextView) v.findViewById(R.id.seconds_unit)).setTextColor(getResources().getColorStateList(unitColorId));
-            //mSeconds.setTextColor(getResources().getColorStateList(numColorId));
         }
 
         if(values.getBoolean(R.styleable.CountDownView_showMilli, false)) {
             View v = ((ViewStub) findViewById(R.id.milliseconds_stub)).inflate();
             mMilliseconds = (TextView) v.findViewById(R.id.milliseconds);
-            //((TextView) v.findViewById(R.id.milliseconds_unit)).setTextColor(getResources().getColorStateList(unitColorId));
-            //mMilliseconds.setTextColor(getResources().getColorStateList(numColorId));
         }
     }
     /**
