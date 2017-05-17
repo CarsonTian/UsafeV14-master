@@ -2,12 +2,11 @@ package com.example.greyson.test1.ui.fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.media.MediaPlayer;
-import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -26,6 +25,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.greyson.test1.R;
+import com.example.greyson.test1.core.SoundService;
 import com.example.greyson.test1.core.TimerListener;
 import com.example.greyson.test1.ui.base.BaseFragment;
 import com.example.greyson.test1.widget.CountDownView2;
@@ -58,16 +58,16 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     private long totalTimeCountInMilliseconds;
     private Runnable wTimer;
     private Handler mHandler;
-    private MediaPlayer mp;
-    private CountDownView2 cdv;                  // Count down timer service
+    //private MediaPlayer mp;
+    private CountDownView2 cdv;                                // Count down timer service
 
     private SharedPreferences preferences2, resumePreference;  // Receive data from other fragments
     private SweetAlertDialog sweetAlertDialog;
-    private String saveTime = "";                  // The state data of timer
+    private String saveTime = "";                              // The state data of timer
     private boolean modeState = true;
     private boolean dState = false;
     private boolean dialogState = false;
-    private boolean inner = true;
+    private boolean mpRunning = false;
     private LocationManager locationManager;
     private String provider;
 
@@ -108,7 +108,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("timeResume", MODE_PRIVATE);  // Safe the data when fragment is destroyed
         edtTimerValue.setText(sharedPreferences.getString("time", ""));                                   // Display the data saved
         dState = sharedPreferences.getBoolean("run", false);
-        inner = sharedPreferences.getBoolean("in", true);
+        mpRunning = sharedPreferences.getBoolean("mp", false);
 
 
         // Check if there is saved data from last timer to judge if a timer need to be started
@@ -164,7 +164,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         rEditor.putString("time", saveTime);
         rEditor.putString("tId", tStamp);
         rEditor.putBoolean("run", dState);
-        rEditor.putBoolean("in", false);
+        rEditor.putBoolean("mp", mpRunning);
         rEditor.commit();
     }
 
@@ -190,6 +190,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             if (setNamCan()) {
                 if (setTimer()) {
                     if (!number.trim().equals("")) {
+                        //checkMediaPlayerPermission();
                         saveTime = edtTimerValue.getText().toString().trim();
                         buttonStartTime.setVisibility(View.GONE);
                         buttonStopTime.setVisibility(View.VISIBLE);
@@ -201,6 +202,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                         time1.setVisibility(View.VISIBLE);
                         helpDialog();
                         dState = true;
+                        mpRunning = true;
                     } else {
                         new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                                 .setTitleText("Notice")
@@ -227,17 +229,11 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             time0.setVisibility(View.VISIBLE);
             time1.setVisibility(View.GONE);
             dState = false;
-        }
-    }
-
-    private void checkMediaPlayerPermission() {
-        mp = new MediaPlayer();
-        try {
-            mp.setDataSource(mContext, RingtoneManager
-                    .getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-            mp.prepare();
-        } catch (Exception e) {
-            e.printStackTrace();
+            if (mpRunning) {
+                Intent intentSV = new Intent(mContext, SoundService.class);
+                mContext.stopService(intentSV);
+            }
+            mpRunning = false;
         }
     }
 
@@ -355,11 +351,9 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             @Override
             public void timerElapsed() {
                 cdv.stop();
-                checkMediaPlayerPermission();
-                if (!inner) {
-                    mp.start();
-                    inner = true;
-                }
+                //if (mpCanRun) {mp.start();}
+                Intent intentSV = new Intent(mContext, SoundService.class);
+                mContext.startService(intentSV);
                 if (!dialogState) {
                     dialog();
                 }
@@ -379,7 +373,9 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                     buttonStopTime.callOnClick();
                     sweetAlertDialog.dismiss();
-                    mp.stop();
+                    //mp.stop();
+                    //Intent intentSV = new Intent(mContext, SoundService.class);
+                    //mContext.stopService(intentSV);
                 }
             });
         } else {
@@ -390,9 +386,11 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                     cdv.setInitialTime(totalTimeCountInMilliseconds);
                     cdv.start();
                     mHandler.removeCallbacks(wTimer);
-                    mp.stop();
+                    //mp.stop();
                     uploadData();
                     sweetAlertDialog.dismiss();
+                    Intent intentSV = new Intent(mContext, SoundService.class);
+                    mContext.stopService(intentSV);
                 }
             });
         }

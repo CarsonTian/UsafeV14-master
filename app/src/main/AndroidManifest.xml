@@ -70,6 +70,8 @@
 
         <service android:name=".core.TimerService" />
         <service android:name=".core.TimerService2" />
+        <service android:name=".core.SoundService" />
+
 
     </application>
 
