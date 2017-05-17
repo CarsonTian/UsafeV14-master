@@ -53,6 +53,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -108,7 +109,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
                     mFAB.setSelected(false);
                 } else if (!mFAB.isSelected()) {
                     initPinMap();
-                    mFAB.setImageResource(R.drawable.ic_map_black_24dp);
+                    mFAB.setImageResource(R.drawable.ic_arrow_back_white_24dp);
                     mFAB.setSelected(true);
                 }
             }
@@ -188,8 +189,8 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
 
     private void moveCamera(int zoomLevel) {
         LatLng latLng = getCurrentLocation();                                             // Get the latitude and lontitude current location
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));                   // Move the camera to the current location
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(zoomLevel));                       // Add the defult zoom value
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));                   // Move the camera to the current location
+        //googleMap.animateCamera(CameraUpdateFactory.zoomTo(zoomLevel));                       // Add the defult zoom value
     }
     /**
      *  This method is used to get the safe places locations from server database and mark them
@@ -254,33 +255,6 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
                     }
                 });
         loadAllPinFromServer();//
-    }
-
-    private void handleNewLocationHide() {
-        latLng = getCurrentLocation();                                             // Get the latitude and lontitude current location
-        Map<String, String> params = new HashMap<>();                                       // Store the params of the URL which is used to request corresponding data from server database
-        params.put("lat", String.valueOf(latLng.latitude));
-        params.put("lng", String.valueOf(latLng.longitude));
-        mRetrofit.create(WSNetService.class)                                                 // Create a listener to observe the change of the server database and update the local data
-                .getSafePlaceData(params)
-                .subscribeOn(Schedulers.io())
-                .compose(this.<SafePlaceRes>bindToLifecycle())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<SafePlaceRes>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(SafePlaceRes safePlaceRes) {                       // The action if the update is running
-                        showMarker(safePlaceRes);
-                        requestRoute(latLng);
-                    }
-                });
     }
 
     private void requestRoute(LatLng latLng) {
@@ -382,11 +356,12 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         String message = safePlaceRes.getMessage();
         // Decide range
         if (!mFAB.isSelected() && message.equalsIgnoreCase("5 KM")) {
-
             googleMap.animateCamera(CameraUpdateFactory.zoomTo(12));
-            Toast.makeText(mContext, "There are no Safe Place in 2KM, Change range to 5KM", Toast.LENGTH_LONG).show();
+            showDialog("Sorry, There are no Safe Place in 2KM, Change range to 5KM");
+            //Toast.makeText(mContext, "There are no Safe Place in 2KM, Change range to 5KM", Toast.LENGTH_LONG).show();
         } else if (message.equalsIgnoreCase("Nothing found")) {
-            Toast.makeText(mContext, "There are no Safe Place in 5KM", Toast.LENGTH_LONG).show();
+            showDialog("Sorry, There are no Safe Place in 5KM");
+            //Toast.makeText(mContext, "There are no Safe Place in 5KM", Toast.LENGTH_LONG).show();
         }
         // Decide different icon
         for (SafePlaceRes.ResultsBean sfRes : safePlaceRes.getResults()) {
@@ -458,6 +433,12 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         }
     }
 
+    private void showDialog(String text) {
+        new SweetAlertDialog(mContext, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText("Sorry")
+                .setContentText(text)
+                .show();
+    }
     /**
      * This method s used to get the current location
      * @return
@@ -621,8 +602,6 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         googleMap.clear();
         moveCamera(14);
         handleNewLocation();
-        loadAllPinFromServer();
-        ///showPinMap();//////////////////////
     }
 
     private void showMyPinMap(GetMyPinRes getMyPinRes) {
@@ -654,8 +633,10 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                if (mFAB.isSelected() == true) {
-                    sendPinStatus(marker);
+                if (mFAB.isSelected() == true ) {
+                    if (marker.getTag() != null && !marker.getTag().toString().isEmpty()) {
+                        sendPinStatus(marker);
+                    }
                 }
             }
         });
@@ -690,7 +671,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                if (mFAB.isSelected() == true ) {
+                if (mFAB.isSelected() == true) {///////////
                     sendPinStatus(marker);
                 }
             }
@@ -723,28 +704,44 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         });
     }
 
-    private void hidePinMap() {
-        googleMap.clear();
-
-        handleNewLocationHide();
-        hidePin = true;
-    }
-
     /**
      * This method is to initialize the map view of pin
      */
     private void initPinMap() {
         googleMap.clear();
-        LatLng latLng = getCurrentLocation();
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(18));
+        moveCamera(18);
         //preferences = mContext.getSharedPreferences("LocalUser",MODE_PRIVATE);
         //showMarkerFromSharedPreference(getObjectFromSharedPreference("admin"));
         Marker pinMarker = googleMap.addMarker(new MarkerOptions().position(latLng)
                 .draggable(true).title("New Pin").snippet("Long Press to Drag")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
         pinMarker.showInfoWindow();
+        pinMarker.setTag("new");
         showMyPinFromServer();
+
+        Map<String, String> params = new HashMap<>();                                       // Store the params of the URL which is used to request corresponding data from server database
+        params.put("lat", String.valueOf(latLng.latitude));
+        params.put("lng", String.valueOf(latLng.longitude));
+        mRetrofit.create(WSNetService.class)                                                 // Create a listener to observe the change of the server database and update the local data
+                .getSafePlaceData(params)
+                .subscribeOn(Schedulers.io())
+                .compose(this.<SafePlaceRes>bindToLifecycle())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<SafePlaceRes>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(SafePlaceRes safePlaceRes) {                       // The action if the update is running
+                        showMarker(safePlaceRes);
+                    }
+                });
+
 
         googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
@@ -800,7 +797,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         String markerStatus;
         markerTag = (String) marker.getTag();
         markerStatus = "old";
-        if (markerTag == null) {
+        if (markerTag == "new") {
             markerStatus = "new";
             markerTag = "1";
             marker.setSnippet("");
@@ -864,64 +861,10 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
                 });
     }
 
-    /**
-     * This method is to delete pins
-     * @param data
-     */
-    private void handleDeletePin(Intent data) {
-        Bundle b = data.getExtras();
-        String deviceId = b.getString("deviceId");
-        String tag = b.getString("tag");
-        UserPinHistory userPinHistory = getObjectFromSharedPreference("admin");
-        ArrayList<MyMarker> myMarkerList = userPinHistory.getMmk();
-        Iterator<MyMarker> iterator = myMarkerList.iterator();
-        while(iterator.hasNext()){
-            MyMarker mk = iterator.next();
-            String mkTag = mk.getMkTag();
-            if(mkTag.equals(tag)){
-                iterator.remove();
-                Toast.makeText(mContext, "Pin Removed",Toast.LENGTH_SHORT).show();
-            }
-        }
-        saveObjectToSharedPreference("admin",userPinHistory);
-        //deletePinFromServer(deviceId);
-    }
-
     private void handleDeletePinFromServer(Intent data) {
         Bundle b = data.getExtras();
         String deviceId = b.getString("tag");
         deletePinFromServer(deviceId);
-    }
-
-    /**
-     * This method is to save pin
-     * @param data
-     */
-    private void handleSavePin (Intent data) {
-        Bundle b = data.getExtras();
-        String id = b.getString("id");
-        String color = b.getString("color");
-        String type = color.split(" ")[0];
-        String note = b.getString("note");
-        Double lat = b.getDouble("lat");
-        Double lng = b.getDouble("lng");
-        String tag = b.getString("tag");
-        String pinStatus = b.getString("status");
-        UserPinHistory userPinHistory = getObjectFromSharedPreference("admin");
-        //Toast.makeText(mContext, tag + lat + lng + color + note,Toast.LENGTH_SHORT).show();
-        if (pinStatus.equals("old")) {
-            MyMarker updateMarker = userPinHistory.getMmk().get(Integer.valueOf(tag));
-            updateMarker.setMkLat(lat);
-            updateMarker.setMkLnt(lng);
-            updateMarker.setMkColor(color);
-            updateMarker.setMkDescription(note);
-            updatePinToServer(id,type,note,lat,lng);
-        }else{
-            MyMarker myMarker = new MyMarker(id,tag, lat, lng, color, note);////
-            userPinHistory.getMmk().add(myMarker);
-        }
-        //savePinToServer(type, note, lat, lng);/////////////////
-        saveObjectToSharedPreference("admin",userPinHistory);
     }
 
     private String getDeviceId() {
@@ -1146,9 +1089,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
      */
     @Override
     public void onLocationChanged(Location location) {
-        if (hidePin) {
-            handleNewLocationHide();
-        } else if (!mFAB.isSelected() && firstLogin == 1) {
+        if (!mFAB.isSelected() && firstLogin == 1) {
             handleNewLocation();
             firstLogin = 0;
         } else if (!mFAB.isSelected() && !this.isHidden()) {
