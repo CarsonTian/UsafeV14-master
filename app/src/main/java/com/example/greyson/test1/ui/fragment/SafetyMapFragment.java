@@ -14,9 +14,6 @@ import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.greyson.test1.R;
 import com.example.greyson.test1.entity.DeletePinRes;
@@ -713,7 +710,7 @@ public class SafetyMapFragment extends BaseFragment implements GoogleApiClient.C
         //preferences = mContext.getSharedPreferences("LocalUser",MODE_PRIVATE);
         //showMarkerFromSharedPreference(getObjectFromSharedPreference("admin"));
         Marker pinMarker = googleMap.addMarker(new MarkerOptions().position(latLng)
-                .draggable(true).title("New Pin").snippet("Long Press to Drag")
+                .draggable(true).title("New Pin").snippet("Long Press the pin below to Drag")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
         pinMarker.showInfoWindow();
         pinMarker.setTag("new");

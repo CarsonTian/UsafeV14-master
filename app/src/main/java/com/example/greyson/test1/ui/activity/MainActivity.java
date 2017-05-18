@@ -145,10 +145,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected void destroyView() {
-        SharedPreferences preferences = this.getSharedPreferences("actID", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("actID", "0");
-        editor.commit();
+
     }
 
     @Override
@@ -160,7 +157,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mLLSafetyMore.setSelected(false);
         switch (v.getId()) {
             case R.id.ll_safetymap:
-                if (!checkMapPermission()) {return;}
+                if (!checkReadPhoneStatePermission()) {return;}
                 index = 0;
                 toolbar.setBackgroundColor(getResources().getColor(R.color.mapMenuBg));
                 mLLSafetyMap.setSelected(true);
@@ -217,7 +214,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
                         Intent intent0 = new Intent(Intent.ACTION_CALL);
-                        intent0.setData(Uri.parse(getResources().getString(R.string.call_000)));
+                        intent0.setData(Uri.parse("tel:000"));
                         if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             checkCallPermission();
                             return;
@@ -321,6 +318,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
-        destroyView();
+        SharedPreferences preferences = this.getSharedPreferences("actID", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("actID", "0");
+        editor.commit();
     }
 }

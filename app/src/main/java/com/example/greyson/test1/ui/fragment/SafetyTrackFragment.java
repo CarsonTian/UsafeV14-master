@@ -64,7 +64,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
 
     private SharedPreferences preferences2, resumePreference;  // Receive data from other fragments
     private SweetAlertDialog sweetAlertDialog;
-    private String saveTime = "";                              // The state data of timer
     private boolean modeState = true;
     private boolean dState = false;
     private boolean dialogState = false;
@@ -84,7 +83,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     @Override
     protected View initView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.frag_safetytrack, container, false);
-        mHandler = new Handler();                                                                        // The timer of sending message
+        //mHandler = new Handler();                                                                        // The timer of sending message
         durTitle = (TextView) view.findViewById(R.id.durTitle);
         modeView = (TextView) view.findViewById(R.id.modeView);
         upWeb = (WebView) view.findViewById(R.id.upWeb);
@@ -130,12 +129,12 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         }
 
         // Sending message timer
-        wTimer = new Runnable() {
-            @Override
-            public void run() {
-                warningDialog();
-            }
-        };
+        //wTimer = new Runnable() {
+            //@Override
+           // public void run() {
+                //warningDialog();
+            //}
+       //};
         return view;
     }
 
@@ -167,12 +166,13 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         dialogState = true;
         SharedPreferences resumePreference = mContext.getSharedPreferences("timeResume", MODE_PRIVATE);
         SharedPreferences.Editor rEditor = resumePreference.edit();
-        rEditor.putString("time", saveTime);
         rEditor.putString("tId", tStamp);
         rEditor.putBoolean("run", dState);
         rEditor.putBoolean("mp", mpRunning);
         rEditor.putString("mode", mode);
         rEditor.commit();
+        //getActivity().finish();/////////////////////////////////////////////////////////////////////////
+
     }
 
     /**
@@ -198,7 +198,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                 if (setTimer()) {
                     if (!number.trim().equals("")) {
                         //checkMediaPlayerPermission();
-                        saveTime = edtTimerValue.getText().toString().trim();
                         buttonStartTime.setVisibility(View.GONE);
                         buttonStopTime.setVisibility(View.VISIBLE);
                         edtTimerValue.setVisibility(View.GONE);
@@ -229,7 +228,6 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                         .show();
             }
         } else if (v.getId() == R.id.btnStopTime) {
-            saveTime = "";
             buttonStartTime.setVisibility(View.VISIBLE);
             buttonStopTime.setVisibility(View.GONE);
             edtTimerValue.setVisibility(View.VISIBLE);
@@ -238,7 +236,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             modeSpinner.setVisibility(View.VISIBLE);
             edtTimerValue.setText("");
             finishUpload();
-            mHandler.removeCallbacks(wTimer);
+            //mHandler.removeCallbacks(wTimer);
             cdv.reset();
             time0.setVisibility(View.VISIBLE);
             time1.setVisibility(View.GONE);
@@ -340,7 +338,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
             return false;
         }
         if (modeState) {
-            totalTimeCountInMilliseconds = Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
+            totalTimeCountInMilliseconds = 60 * Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
             cusTime = edtTimerValue.getText().toString().trim();
             return true;
         } else {
@@ -352,7 +350,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                         .show();
                 return false;
             } else {
-                totalTimeCountInMilliseconds = Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
+                totalTimeCountInMilliseconds = 60 * Integer.parseInt(edtTimerValue.getText().toString().trim()) * 1000;
                 cusTime = edtTimerValue.getText().toString().trim();
                 return true;
             }
@@ -371,15 +369,27 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                 if (!dialogState) {
                     dialog();
                 }
-                mHandler.postDelayed(wTimer, 60000);
+                //mHandler.postDelayed(wTimer, 60000);
             }
         });
     }
 
     private void dialog() {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        Long time = Long.valueOf(System.currentTimeMillis());
+
+        String name;
+        if (preferences2.getString("contact2", "").equals(";")) {
+            name = preferences2.getString("contact1", "").trim().split(";")[1];
+        } else if (preferences2.getString("contact3", "").equals(";")) {
+            name = preferences2.getString("contact1", "").trim().split(";")[1] + ", " + preferences2.getString("contact2", "").trim().split(";")[1];
+        } else {
+            name = preferences2.getString("contact1", "").trim().split(";")[1] + ", " + preferences2.getString("contact2", "").trim().split(";")[1] + ", " + preferences2.getString("contact3", "").trim().split(";")[1];
+        }
+
         sweetAlertDialog = new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Alarm")
-                .setContentText("Are you safe? you have 1 min to confirm");
+                .setContentText( format.format(time) + ", Are you safe? You have 1 min to confirm, otherwise we will send warning message to " + name);
         if (modeState) {
             sweetAlertDialog.setConfirmText("Finish");
             sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -399,7 +409,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
                     cdv.setInitialTime(totalTimeCountInMilliseconds);
                     cdv.start();
-                    mHandler.removeCallbacks(wTimer);
+                    //mHandler.removeCallbacks(wTimer);
                     //mp.stop();
                     uploadData();
                     sweetAlertDialog.dismiss();
@@ -431,20 +441,30 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
         }
         SweetAlertDialog sweetAlertDialog1 = new SweetAlertDialog(mContext, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Alarm")
-                .setContentText(getResources().getString(R.string.tracker_send_message) + name)
+                .setContentText("We have sent warning messages, please contact " + name)
                 .setConfirmText("Yes")
                 .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sweetAlertDialog1) {
                         sweetAlertDialog1.dismiss();
                         sweetAlertDialog.dismiss();
-                        saveTime = "";
                         buttonStartTime.setVisibility(View.VISIBLE);
                         buttonStopTime.setVisibility(View.GONE);
                         edtTimerValue.setVisibility(View.VISIBLE);
+                        modeView.setText("");
+                        modeView.setVisibility(View.GONE);
+                        modeSpinner.setVisibility(View.VISIBLE);
                         edtTimerValue.setText("");
-                        mHandler.removeCallbacks(wTimer);
+                        //mHandler.removeCallbacks(wTimer);
                         cdv.reset();
+                        if (mpRunning) {
+                            Intent intentSV = new Intent(mContext, SoundService.class);
+                            mContext.stopService(intentSV);
+                        }
+                        mpRunning = false;
+                        dState = false;
+                        time0.setVisibility(View.VISIBLE);
+                        time1.setVisibility(View.GONE);
                     }
                 });
 
@@ -459,22 +479,22 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void uploadData() {
-        //upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/update/?deviceid=" + id + tStamp + "&status=safe&lat=" + cLatitude + "&lng=" + cLngtitude);
+        upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/update/?deviceid=" + id + tStamp + "&status=safe&lat=" + cLatitude + "&lng=" + cLngtitude);
     }
 
     private void startUpload() {
         timeStamp();
         if (preferences2.getString("contact2", "").equals(";")) {
-            //upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences2.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences2.getString("contact1", "").trim().split(";")[1] + "&c2=&c3=&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+            upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences2.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences2.getString("contact1", "").trim().split(";")[1] + "&c2=&c3=&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
         } else if (preferences2.getString("contact3", "").equals(";")) {
-            //upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences2.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences2.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences2.getString("contact2", "").trim().split(";")[1] + "&c3=&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+           upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences2.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences2.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences2.getString("contact2", "").trim().split(";")[1] + "&c3=&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
         } else {
-            //upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences2.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences2.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences2.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences2.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
+            upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/create/?deviceid=" + id + tStamp + "&name=" + preferences2.getString("userName" , "") + "&uphone=" + number + "&c1=" + preferences2.getString("contact1", "").trim().split(";")[1] + "&c2=" + preferences2.getString("contact2", "").trim().split(";")[1] + "&c3=" + preferences2.getString("contact3", "").trim().split(";")[1] + "&status=start&period=" + cusTime + "&lat=" + cLatitude + "&lng=" + cLngtitude);
         }
     }
 
     private void finishUpload() {
-        //upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/update/?deviceid=" + id + tStamp + "&status=reached&lat=" + cLatitude + "&lng=" + cLngtitude);
+        upWeb.loadUrl("http://usafe.epnjkefarc.us-west-2.elasticbeanstalk.com/trailtrack/update/?deviceid=" + id + tStamp + "&status=reached&lat=" + cLatitude + "&lng=" + cLngtitude);
     }
 
     @Override
@@ -488,7 +508,7 @@ public class SafetyTrackFragment extends BaseFragment implements View.OnClickLis
                 break;
             case 1:
                 durTitle.setText(R.string.period);
-                edtTimerValue.setHint("(5-30)min");
+                edtTimerValue.setHint("(1-30)min");
                 modeState = false;
                 mode = "Explore";
                 break;

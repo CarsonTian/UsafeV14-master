@@ -20,7 +20,6 @@
     <string name="contact_too_much_error">Sorry, You cannot pick more than 3 contacts.</string>
     <string name="permission_successful">All permissions granted successfully.</string>
     <string name="permission_failed">Some functions of the app will rely on these permissions, please allow these permission request.</string>
-    <string name="call_000">111</string>
     <string name="call_000_dialog">Call 000?</string>
     <string name="initail_tips">Some functions of the app requires your to add emergency contact and your name, please add them for use of them</string>
     <string name="initail_tips_button">Go to user setting</string>
